@@ -1,0 +1,1 @@
+export type TRole = 'owner' | 'editor' | 'viewer'
