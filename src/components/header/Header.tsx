@@ -1,3 +1,5 @@
+import { useAuth } from '@/providers/AuthProvider'
+
 import { useGroupInvitationsModal } from '@/store/useGroupInvitationsModal'
 
 import { InvitationsGroupModal } from '../groups/group-invitations/InvitationsGroupModal'
@@ -6,14 +8,21 @@ import { Avatar } from './avatar/Avatar'
 import { MenuItem } from './menu/MenuItem'
 import { MENU } from './menu/menu.data'
 import { NotificationBell } from './notifications/NotificationBell'
+import { DASHBOARD_PAGES } from '@/config/page.url.config'
 
 export function Header() {
+	const { currentGroupRole } = useAuth()
 	const { isOpen, defaultTab, close } = useGroupInvitationsModal()
 
 	return (
 		<header className='h-20 bg-[#E0F2FE] flex items-center justify-between px-20'>
 			<div className='flex space-x-0'>
-				{MENU.map(item => (
+				{MENU.filter(item => {
+					if (item.link === DASHBOARD_PAGES.ADMIN_PANEL) {
+						return currentGroupRole === 'admin'
+					}
+					return true
+				}).map(item => (
 					<MenuItem
 						item={item}
 						key={item.link}
