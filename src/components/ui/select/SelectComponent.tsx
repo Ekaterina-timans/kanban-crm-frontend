@@ -37,7 +37,7 @@ export function SelectComponent({
 		>
 			<Select.Trigger
 				className={cn(
-					'flex items-center justify-between w-full h-[47px] border-2 border-gray-300 rounded-lg bg-white px-3 text-base text-gray-800 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition',
+					'flex items-center justify-between w-full h-[47px] border border-gray-200 rounded-lg bg-white px-3 text-base text-gray-800 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition',
 					className
 				)}
 			>

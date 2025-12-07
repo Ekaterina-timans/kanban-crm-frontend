@@ -1,10 +1,5 @@
 'use client'
 
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger
-} from '@radix-ui/react-popover'
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -15,6 +10,7 @@ import { ITaskForm } from '@/types/modal.types'
 import { Button } from '../button/Button'
 
 import { Calendar } from './calendar'
+import { Popover, PopoverContent, PopoverTrigger } from './popover'
 import { cn } from '@/lib/utils'
 
 interface ICalendarComponentProps {
