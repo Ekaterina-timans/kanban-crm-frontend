@@ -4,6 +4,7 @@ export interface IUser {
   name?: string | null
   avatar?: string | FileList | null
   created_at: string
+  access_level: 'admin' | 'user' 
 }
 
 export interface IUserProfile extends IUser {

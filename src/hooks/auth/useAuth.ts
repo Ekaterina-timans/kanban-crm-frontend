@@ -10,10 +10,17 @@ export function useLogin() {
 
 	return useMutation({
 		mutationFn: authService.login,
-		onSuccess() {
+		onSuccess(response) {
+			const user = response.data.user
+
 			queryClient.invalidateQueries({ queryKey: ['auth', 'profile'] })
 			toast.success('Аутентификация прошла успешно!')
-			router.push('/statistics')
+
+			if (user?.access_level === 'admin') {
+				router.push('/admin')
+			} else {
+				router.push('/statistics')
+			}
 		},
 		onError(error: any) {
 			toast.error(error?.response?.data?.message || 'Ошибка входа')
