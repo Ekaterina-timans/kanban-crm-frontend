@@ -18,11 +18,11 @@ export function formatTime(iso?: string | null): string {
 	return d.isValid() ? d.format('HH:mm') : ''
 }
 
-/** Формат: 2025-01-23 12:33:11 */
+/** Формат: 2025.01.23 12:33:11 */
 export function formatDate(date: Date | undefined): string | null {
 	if (!date) return null
 	const tz = useTimezoneStore.getState().timezone
-	return dayjs(date).tz(tz).format('YYYY-MM-DD HH:mm:ss')
+	return dayjs(date).tz(tz).format('YYYY.MM.DD HH:mm:ss')
 }
 
 /** Формат: 23.01.2025 */

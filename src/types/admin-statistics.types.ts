@@ -1,4 +1,4 @@
-export type AdminPeriod = 'today' | 'week' | 'month' | 'quarter' | 'year'
+export type AdminPeriod = 'today' | 'week' | 'month' | 'quarter' | 'year' | 'range'
 
 export interface IGroupsActivityStats {
 	total: number

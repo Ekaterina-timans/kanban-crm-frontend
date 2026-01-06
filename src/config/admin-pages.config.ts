@@ -3,7 +3,7 @@ class ADMIN {
 	STATISTICS = '/admin/statistics'
 	USERS = '/admin/users'
 	GROUPS = '/admin/groups'
-	SETTINGS = '/admin/settings'
+	PROFILE = '/admin/profile'
 }
 
 export const ADMIN_PAGES = new ADMIN()

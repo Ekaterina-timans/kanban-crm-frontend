@@ -62,3 +62,63 @@ export function useDeleteAdminUser() {
 		}
 	})
 }
+
+// Назначить пользователя админом
+export function usePromoteAdminUser() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (userId: number) => adminUserService.promoteUser(userId),
+    onSuccess: (data, userId) => {
+      toast.success(data.message || 'Пользователь назначен администратором')
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] })
+      queryClient.invalidateQueries({ queryKey: ['admin-user', userId] })
+    },
+    onError: () => toast.error('Ошибка при назначении админа')
+  })
+}
+
+// Снять админа приложения
+export function useDemoteAdminUser() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (userId: number) => adminUserService.demoteUser(userId),
+    onSuccess: (data, userId) => {
+      toast.success(data.message || 'Права администратора сняты')
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] })
+      queryClient.invalidateQueries({ queryKey: ['admin-user', userId] })
+    },
+    onError: () => toast.error('Ошибка при снятии админа')
+  })
+}
+
+// Блокировка пользователя в конкретной группе
+export function useBlockUserInGroup() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ userId, groupId }: { userId: number; groupId: number }) =>
+      adminUserService.blockUserInGroup(userId, groupId),
+    onSuccess: (data, vars) => {
+      toast.success(data.message || 'Пользователь заблокирован в группе')
+      queryClient.invalidateQueries({ queryKey: ['admin-user', vars.userId] })
+    },
+    onError: () => toast.error('Ошибка при блокировке в группе')
+  })
+}
+
+// Разблокировка пользователя в конкретной группе
+export function useUnblockUserInGroup() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ userId, groupId }: { userId: number; groupId: number }) =>
+      adminUserService.unblockUserInGroup(userId, groupId),
+    onSuccess: (data, vars) => {
+      toast.success(data.message || 'Пользователь разблокирован в группе')
+      queryClient.invalidateQueries({ queryKey: ['admin-user', vars.userId] })
+    },
+    onError: () => toast.error('Ошибка при разблокировке в группе')
+  })
+}

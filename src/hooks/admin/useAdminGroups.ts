@@ -1,15 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
+import { AdminGroupsParams } from '@/types/admin-group.types'
+
 import { adminGroupService } from '@/services/admin-group.service'
 
 // Список групп
-export function useAdminGroups(params?: {
-	q?: string
-	status?: 'active' | 'passive'
-	sort?: 'activity'
-	page?: number
-}) {
+export function useAdminGroups(params?: AdminGroupsParams) {
 	return useQuery({
 		queryKey: ['admin-groups', params],
 		queryFn: () => adminGroupService.getGroups(params)

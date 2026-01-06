@@ -1,7 +1,11 @@
 import {
+	AdminGroupsParams,
+	IAdminGroup,
 	IGroupDetails,
 	IGroupMember,
-	IGroupSpace
+	IGroupSpace,
+	LaravelPagination,
+	PaginatedResponse
 } from '@/types/admin-group.types'
 
 import { axiosRequest } from '@/api/interceptors'
@@ -10,14 +14,25 @@ class AdminGroupService {
 	private BASE = '/admin/groups'
 
 	/** Список групп */
-	async getGroups(params?: {
-		q?: string
-		status?: 'active' | 'passive'
-		sort?: 'activity'
-		page?: number
-	}) {
-		const res = await axiosRequest.get(this.BASE, { params })
-		return res.data
+	async getGroups(params?: AdminGroupsParams): Promise<PaginatedResponse<IAdminGroup>> {
+		const res = await axiosRequest.get<LaravelPagination<IAdminGroup>>(this.BASE, {
+			params
+		})
+
+		const p = res.data
+
+		return {
+			data: p.data,
+			meta: {
+				current_page: p.current_page,
+				last_page: p.last_page,
+				per_page: p.per_page,
+				total: p.total,
+				from: p.from,
+				to: p.to
+			},
+			links: p.links
+		}
 	}
 
 	/** Детали группы */

@@ -1,6 +1,5 @@
 'use client'
 
-import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 
@@ -19,8 +18,12 @@ import {
 	useAdminUser,
 	useBlockAdminUser,
 	useDeleteAdminUser,
+	useDemoteAdminUser,
+	usePromoteAdminUser,
 	useUnblockAdminUser
 } from '@/hooks/admin/useAdminUsers'
+
+import { formatDate } from '@/utils/date-utils'
 
 import { cn } from '@/lib/utils'
 
@@ -40,21 +43,18 @@ export default function AdminUserDetailsPage() {
 	const blockMutation = useBlockAdminUser()
 	const unblockMutation = useUnblockAdminUser()
 	const deleteMutation = useDeleteAdminUser()
+	const promoteMutation = usePromoteAdminUser()
+	const demoteMutation = useDemoteAdminUser()
 
 	if (isLoading) {
 		return <div className='text-sm text-muted-foreground'>Загрузка...</div>
 	}
 
 	if (isError) {
-		return (
-			<div className='text-sm text-muted-foreground'>
-				Ошибка загрузки confirm
-			</div>
-		)
+		return <div className='text-sm text-muted-foreground'>Ошибка загрузки</div>
 	}
 
 	const user = data?.user
-	const groups: GroupRow[] = (data?.groups as GroupRow[]) ?? []
 
 	if (!user) {
 		return (
@@ -64,14 +64,28 @@ export default function AdminUserDetailsPage() {
 		)
 	}
 
+	const groups: GroupRow[] = ((data?.groups as GroupRow[]) ?? []).map(g => ({
+		...g,
+		_userId: user.id
+	}))
+
 	const isBlocked = user.account_status === 'blocked'
+	const isAdmin = user.access_level === 'admin'
+
+	const isAnyActionPending =
+		blockMutation.isPending ||
+		unblockMutation.isPending ||
+		deleteMutation.isPending ||
+		promoteMutation.isPending ||
+		demoteMutation.isPending
 
 	return (
 		<div className='space-y-6'>
 			{/* Top bar */}
 			<div className='flex items-center justify-between'>
-				<div>
-					<h1 className='text-2xl font-semibold'>Пользователь ID: {user.id}</h1>
+				<div className='flex gap-5 items-center'>
+					<h1 className='text-2xl font-semibold'>Пользователь</h1>
+					<span className='text-xl'>ID: {user.id}</span>
 				</div>
 
 				<Link
@@ -88,8 +102,8 @@ export default function AdminUserDetailsPage() {
 					{/* Left */}
 					<div className='flex items-center gap-4'>
 						<UserAvatar
-							src={user.avatar}
-							name={user.name}
+							src={user.avatar ?? null}
+							name={user.name ?? null}
 							email={user.email}
 							size={56}
 							className='border border-slate-300'
@@ -120,16 +134,17 @@ export default function AdminUserDetailsPage() {
 					{/* Right */}
 					<div className='flex flex-col items-end gap-3'>
 						<div className='text-sm text-muted-foreground'>
-							Создан: {new Date(user.created_at).toLocaleString()}
+							Создан: {formatDate(new Date(user.created_at))}
 						</div>
 
-						<div className='flex gap-2'>
+						<div className='flex gap-2 flex-wrap justify-end'>
+							{/* Глобальная блокировка */}
 							{isBlocked ? (
 								<Button
 									variant='secondary'
 									size='sm'
 									onClick={() => unblockMutation.mutate(user.id)}
-									disabled={unblockMutation.isPending}
+									disabled={isAnyActionPending}
 								>
 									Разблокировать
 								</Button>
@@ -138,12 +153,46 @@ export default function AdminUserDetailsPage() {
 									variant='secondary'
 									size='sm'
 									onClick={() => blockMutation.mutate(user.id)}
-									disabled={blockMutation.isPending}
+									disabled={isAnyActionPending}
 								>
 									Заблокировать
 								</Button>
 							)}
 
+							{/* Назначить / снять админа приложения */}
+							{isAdmin ? (
+								<Button
+									variant='outline'
+									size='sm'
+									onClick={() => {
+										const ok = confirm(
+											`Снять права администратора у пользователя #${user.id}?`
+										)
+										if (!ok) return
+										demoteMutation.mutate(user.id)
+									}}
+									disabled={isAnyActionPending}
+								>
+									Снять админа
+								</Button>
+							) : (
+								<Button
+									variant='outline'
+									size='sm'
+									onClick={() => {
+										const ok = confirm(
+											`Назначить пользователя #${user.id} администратором приложения?`
+										)
+										if (!ok) return
+										promoteMutation.mutate(user.id)
+									}}
+									disabled={isAnyActionPending}
+								>
+									Сделать админом
+								</Button>
+							)}
+
+							{/* Удаление */}
 							<Button
 								variant='destructive'
 								size='sm'
@@ -155,7 +204,7 @@ export default function AdminUserDetailsPage() {
 										onSuccess: () => router.replace(ADMIN_PAGES.USERS)
 									})
 								}}
-								disabled={deleteMutation.isPending}
+								disabled={isAnyActionPending}
 							>
 								Удалить
 							</Button>
@@ -166,7 +215,12 @@ export default function AdminUserDetailsPage() {
 
 			{/* Groups Table */}
 			<div className='rounded-xl border bg-white p-6 shadow-sm'>
-				<h2 className='text-lg font-semibold'>Группы пользователя</h2>
+				<div className='mb-4 flex items-center justify-between'>
+					<h2 className='text-lg font-semibold'>Группы пользователя</h2>
+					<span className='text-sm text-muted-foreground'>
+						Всего: {groups.length}
+					</span>
+				</div>
 
 				<DataTable
 					columns={userGroupsColumns}

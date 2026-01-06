@@ -11,7 +11,7 @@ import { axiosRequest } from '@/api/interceptors'
 class AdminUserService {
 	private BASE = '/admin/users'
 
-	/** Список пользователей */
+	/* Список пользователей */
 	async getUsers(
 		params?: AdminUsersParams
 	): Promise<PaginatedResponse<IAdminUser>> {
@@ -38,7 +38,7 @@ class AdminUserService {
 		}
 	}
 
-	/** Один пользователь */
+	/* Один пользователь */
 	async getUser(id: number): Promise<{
 		user: IAdminUser
 		groups: IUserGroupInfo[]
@@ -47,21 +47,55 @@ class AdminUserService {
 		return res.data
 	}
 
-	/** Заблокировать */
+	/* Заблокировать */
 	async blockUser(id: number): Promise<{ message: string }> {
 		const res = await axiosRequest.patch(`${this.BASE}/${id}/block`)
 		return res.data
 	}
 
-	/** Разблокировать */
+	/* Разблокировать */
 	async unblockUser(id: number): Promise<{ message: string }> {
 		const res = await axiosRequest.patch(`${this.BASE}/${id}/unblock`)
 		return res.data
 	}
 
-	/** Удалить пользователя */
+	/* Удалить пользователя */
 	async deleteUser(id: number): Promise<{ message: string }> {
 		const res = await axiosRequest.delete(`${this.BASE}/${id}`)
+		return res.data
+	}
+
+	/* Назначить админом приложения */
+	async promoteUser(id: number): Promise<{ message: string }> {
+		const res = await axiosRequest.patch(`${this.BASE}/${id}/promote`)
+		return res.data
+	}
+
+	/* Снять админа приложения */
+	async demoteUser(id: number): Promise<{ message: string }> {
+		const res = await axiosRequest.patch(`${this.BASE}/${id}/demote`)
+		return res.data
+	}
+
+	/* Блокировка пользователя в конкретной группе */
+	async blockUserInGroup(
+		userId: number,
+		groupId: number
+	): Promise<{ message: string }> {
+		const res = await axiosRequest.patch(
+			`${this.BASE}/${userId}/groups/${groupId}/block`
+		)
+		return res.data
+	}
+
+	/* Разблокировка пользователя в конкретной группе */
+	async unblockUserInGroup(
+		userId: number,
+		groupId: number
+	): Promise<{ message: string }> {
+		const res = await axiosRequest.patch(
+			`${this.BASE}/${userId}/groups/${groupId}/unblock`
+		)
 		return res.data
 	}
 }

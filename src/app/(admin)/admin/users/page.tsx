@@ -89,6 +89,9 @@ export default function AdminUsersPage() {
 						{ value: 'blocked', label: 'Заблокированные' }
 					]}
 				/>
+				<div className='flex items-center justify-end text-sm text-gray-500'>
+					{meta ? <span>Всего: {meta.total}</span> : <span>—</span>}
+				</div>
 			</div>
 
 			{/* Table */}

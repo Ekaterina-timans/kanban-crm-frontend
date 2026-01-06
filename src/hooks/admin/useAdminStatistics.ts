@@ -37,7 +37,7 @@ export function useAdminGroupsActivity(period: {
 	return useQuery({
 		queryKey: ['admin-groups-activity', period],
 		queryFn: () => adminStatisticsService.groupsActivity(period),
-		enabled: !!period
+		enabled: !!period?.period
 	})
 }
 
@@ -50,6 +50,6 @@ export function useAdminInactiveGroups(period: {
 	return useQuery({
 		queryKey: ['admin-inactive-groups', period],
 		queryFn: () => adminStatisticsService.inactiveGroups(period),
-		enabled: !!period
+		enabled: !!period?.period
 	})
 }

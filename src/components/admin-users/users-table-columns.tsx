@@ -7,6 +7,7 @@ import { Button, buttonVariants } from '@/components/ui/button/Button'
 import { ADMIN_PAGES } from '@/config/admin-pages.config'
 
 import { cn } from '@/lib/utils'
+import { formatDateForCard } from '@/utils/date-utils'
 
 export type UserRow = {
 	id: number
@@ -99,7 +100,7 @@ export function getUsersColumns({
 				const date = row.original.created_at
 				return (
 					<span className='text-gray-600'>
-						{date ? new Date(date).toLocaleDateString() : '—'}
+						{date ? formatDateForCard(date) : '—'}
 					</span>
 				)
 			}

@@ -1,4 +1,4 @@
-import { BarChart3, Settings, UserRoundCog, Users, UsersRound } from 'lucide-react'
+import { BarChart3, LogOut, UserRoundCog, UserRoundPen, UsersRound } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -7,6 +7,7 @@ import { ADMIN_PAGES } from '@/config/admin-pages.config'
 import { buttonVariants } from '../ui/button/Button'
 
 import { cn } from '@/lib/utils'
+import { useLogout } from '@/hooks/auth/useLogout'
 
 type NavItem = {
 	label: string
@@ -18,7 +19,7 @@ const NAV_ITEMS: NavItem[] = [
 	{ label: 'Статистика', href: ADMIN_PAGES.STATISTICS, icon: BarChart3 },
 	{ label: 'Пользователи', href: ADMIN_PAGES.USERS, icon: UserRoundCog },
 	{ label: 'Группы', href: ADMIN_PAGES.GROUPS, icon: UsersRound },
-	{ label: 'Настройки', href: ADMIN_PAGES.SETTINGS, icon: Settings }
+	{ label: 'Профиль', href: ADMIN_PAGES.PROFILE, icon: UserRoundPen }
 ]
 
 function isActivePath(pathname: string, href: string) {
@@ -27,6 +28,7 @@ function isActivePath(pathname: string, href: string) {
 
 export function AdminSidebar() {
 	const pathname = usePathname()
+	const { logout, isPending } = useLogout()
 
 	return (
 		<aside className='sticky top-0 h-screen w-[260px] border-r bg-background'>
@@ -65,6 +67,24 @@ export function AdminSidebar() {
 						)
 					})}
 				</nav>
+				<div className='mt-auto pt-4 border-t'>
+					<button
+						type='button'
+						onClick={() => logout()}
+						disabled={isPending}
+						className={cn(
+							buttonVariants({
+								variant: 'ghost',
+								size: 'sm',
+								className:
+									'w-full justify-start gap-2 text-red-600 hover:text-red-700'
+							})
+						)}
+					>
+						<LogOut className='h-4 w-4' />
+						{isPending ? 'Выходим...' : 'Выйти'}
+					</button>
+				</div>
 			</div>
 		</aside>
 	)
