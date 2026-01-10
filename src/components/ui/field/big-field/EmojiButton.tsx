@@ -14,7 +14,7 @@ export function EmojiButton({
 	const [showPicker, setShowPicker] = useState(false)
 
 	const insertEmoji = (emojiData: EmojiClickData) => {
-    // Глушим следующий click, чтобы не срабатывало открытие файла
+		// Глушим следующий click, чтобы не срабатывало открытие файла
 		const suppressNextClick = (e: MouseEvent) => {
 			e.stopPropagation()
 			e.preventDefault()
@@ -53,7 +53,7 @@ export function EmojiButton({
 			<button
 				type='button'
 				onClick={() => setShowPicker(!showPicker)}
-				className='absolute top-4 right-0 flex items-start pr-3 text-slate-500 hover:text-slate-700'
+				className='absolute top-4 right-0 flex items-start pr-3 text-muted-foreground hover:text-primary transition-colors'
 				title='Добавить смайлик'
 			>
 				<Smile size={iconSize} />

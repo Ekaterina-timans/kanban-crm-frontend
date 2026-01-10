@@ -1,9 +1,10 @@
+import { UserAvatar } from '@/components/ui/avatar/UserAvatar'
+
 import { ISpaceResponse } from '@/types/space.types'
 
 import { useSettingsPanel } from '@/store/useSettingsPanel'
 
 import { SpaceContextMenu } from './SpaceContextMenu'
-import { UserAvatar } from '@/components/ui/avatar/UserAvatar'
 
 export function CardInfoProject({
 	item,
@@ -26,16 +27,21 @@ export function CardInfoProject({
 			aria-selected={active}
 			onClick={() => onSelectSpace(String(item.id))}
 			className={[
-				'w-full text-left rounded-xl transition mb-4 cursor-pointer',
-				'border bg-white',
-				active
-					? 'border-blue-400 ring-2 ring-blue-200'
-					: 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
-			].join(' ')}
+				'w-full text-left rounded-xl cursor-pointer transition-colors mb-4',
+				'border bg-white dark:bg-card',
+				!active &&
+					'border-slate-200 hover:bg-slate-100 hover:border-slate-300 ' +
+						'dark:border-border dark:hover:bg-accent/40 dark:hover:border-border',
+				active &&
+					'border-blue-400 ring-2 ring-blue-200 bg-white ' +
+						'dark:border-primary dark:ring-2 dark:ring-primary/20 dark:bg-card'
+			]
+				.filter(Boolean)
+				.join(' ')}
 		>
 			<div className='p-3'>
 				<div className='flex justify-between items-start'>
-					<h4 className='text-slate-800 text-[15px] font-semibold'>
+					<h4 className='text-[15px] font-semibold text-foreground'>
 						{item.name}
 					</h4>
 
@@ -71,11 +77,11 @@ export function CardInfoProject({
 					)}
 
 					{users.length === 0 && (
-						<p className='text-[12px] text-slate-400 ml-1'>Нет участников</p>
+						<p className='text-[12px] text-muted-foreground ml-1'>Нет участников</p>
 					)}
 				</div>
 
-				<div className='mt-2 text-[13px] text-slate-600'>
+				<div className='mt-2 text-[13px] text-muted-foreground'>
 					{item.description || 'Описание отсутствует'}
 				</div>
 			</div>

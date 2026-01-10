@@ -17,8 +17,14 @@ export function CardInfoChat({
 	return (
 		<div
 			className={[
-				'flex items-center justify-between p-3 border border-gray-200 rounded-lg mb-2 bg-white hover:bg-[#E0F2FE] cursor-pointer transition-colors',
-				isSelected ? 'bg-[#E0F2FE]' : ''
+				'flex items-center justify-between p-3 rounded-xl mb-2 cursor-pointer transition-colors',
+				'border bg-white dark:bg-card',
+				!isSelected &&
+					'border-slate-200 hover:bg-[#E0F2FE] hover:border-slate-300 ' +
+						'dark:border-border dark:hover:bg-accent/40 dark:hover:border-border',
+				isSelected &&
+					'border-blue-400 ring-2 ring-blue-200 bg-white ' +
+						'dark:border-primary dark:ring-2 dark:ring-primary/20 dark:bg-card'
 			].join(' ')}
 			onClick={onClick}
 		>
@@ -33,11 +39,11 @@ export function CardInfoChat({
 					fallbackClassName='font-semibold text-base'
 				/>
 
-				<div className='flex flex-col overflow-hidden'>
-					<span className='font-semibold text-base text-gray-900 truncate'>
+				<div className='flex flex-col overflow-hidden min-w-0'>
+					<span className='font-semibold text-base text-foreground truncate'>
 						{chat.title}
 					</span>
-					<span className='text-sm text-gray-600 truncate'>
+					<span className='text-sm text-muted-foreground truncate'>
 						{chat.last_message || 'Нет сообщений'}
 					</span>
 				</div>

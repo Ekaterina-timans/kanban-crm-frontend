@@ -1,5 +1,5 @@
 import { CalendarComponent } from '@/components/ui/calendar/CalendarComponent'
-
+import { BigField } from '@/components/ui/field/big-field/BigField'
 import { ScrollArea } from '@/components/ui/scroll/scroll-area'
 import { SelectComponent } from '@/components/ui/select/SelectComponent'
 
@@ -17,11 +17,11 @@ import { useUpdateChecklist } from '@/hooks/check-list/useUpdateChecklist'
 import { useUpdateChecklistItem } from '@/hooks/check-list/useUpdateChecklistItem'
 import { useGetSpaceUsers } from '@/hooks/space-user/useGetSpaceUsers'
 import { useUpdateTask } from '@/hooks/task/useUpdateTaskDetails'
+
+import { formatDate } from '@/utils/date-utils'
 import { getPriorityOptions, getStatusOptions } from '@/utils/selectOptions'
 
 import { ChecklistList } from './ChecklistList'
-import { BigField } from '@/components/ui/field/big-field/BigField'
-import { formatDate } from '@/utils/date-utils'
 
 export function TaskDetailsPanel({
 	task,
@@ -178,11 +178,9 @@ export function TaskDetailsPanel({
 				<div>
 					<h3 className='font-semibold text-blue-600 mb-2'>Срок выполнения</h3>
 					<CalendarComponent
-						placeholder={
-							task.due_date
-								? new Date(task.due_date).toLocaleDateString()
-								: 'Выберите дату'
-						}
+						value={task.due_date ? new Date(task.due_date) : null}
+						placeholder='Выберите дату'
+						clearable
 						onDateChange={(date: Date) =>
 							updateDueDate({
 								taskId: task.id,

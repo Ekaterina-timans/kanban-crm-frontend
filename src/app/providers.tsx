@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation'
 import NProgress from 'nprogress'
 import { PropsWithChildren, useEffect, useState } from 'react'
 
+import { AppLoader } from '@/components/ui/loader/AppLoader'
+
 import { AuthProvider } from '@/providers/AuthProvider'
 
 export function Providers({ children }: PropsWithChildren) {
@@ -26,8 +28,11 @@ export function Providers({ children }: PropsWithChildren) {
 		return () => clearTimeout(timer)
 	}, [pathname])
 
+	// const DEBUG_LOADER = true
+
 	return (
 		<QueryClientProvider client={client}>
+			{/* <AuthProvider>{DEBUG_LOADER ? <AppLoader /> : children}</AuthProvider> */}
 			<AuthProvider>{children}</AuthProvider>
 		</QueryClientProvider>
 	)

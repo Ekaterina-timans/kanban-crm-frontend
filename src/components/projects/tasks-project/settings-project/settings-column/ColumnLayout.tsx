@@ -84,8 +84,9 @@ export function ColumnLayout({ columns }: { columns: IColumn[] }) {
 			</DndContext>
 			<div className='flex mt-5'>
 				<Button
+					variant='default'
 					onClick={handleSaveOrder}
-					className='px-4 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition'
+					className='px-4 py-2 rounded transition'
 					disabled={isPending}
 				>
 					{isPending ? 'Сохраняю...' : 'Сохранить'}

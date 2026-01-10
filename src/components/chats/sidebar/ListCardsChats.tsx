@@ -30,9 +30,9 @@ export function ListCardsChats({ search = '' }: { search?: string }) {
 
 	return (
 		<ScrollArea className='h-[80%] my-4 w-full'>
-			<div className='w-[88%]'>
+			<div className='w-[95%] px-0.5'>
 				{isLoading && (
-					<div className='text-sm text-slate-500 p-2'>Загрузка…</div>
+					<div className='text-sm text-muted-foreground p-2'>Загрузка…</div>
 				)}
 				{!isLoading && filtered.length === 0 && <></>}
 				{!isLoading &&

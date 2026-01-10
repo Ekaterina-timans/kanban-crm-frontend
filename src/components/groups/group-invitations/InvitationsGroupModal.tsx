@@ -15,6 +15,7 @@ import { ModalWrapper } from '../../ui/modal/ModalWrapper'
 import { AddingParticipant } from './AddingParticipant'
 import { InvitationHistory } from './InvitationHistory'
 import { RequestGroups } from './RequestsGroups'
+import { cn } from '@/lib/utils'
 import { groupService } from '@/services/group.service'
 
 interface InvitationsGroupModalProps extends IModalProps {
@@ -75,10 +76,13 @@ export function InvitationsGroupModal({
 		<ModalWrapper
 			isOpen={isOpen}
 			onClose={onClose}
+			className='w-[650px] max-w-[65vw]'
 		>
 			<button
-				className='absolute top-4 right-4 text-muted-foreground hover:text-black transition-colors'
+				type='button'
 				onClick={onClose}
+				aria-label='Закрыть'
+				className='absolute top-1 right-2 rounded-lg p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors'
 			>
 				<X className='w-5 h-5' />
 			</button>
@@ -88,10 +92,15 @@ export function InvitationsGroupModal({
 				value={activeTab}
 				onValueChange={v => setActiveTab(v as TabName)}
 			>
-				<TabsList className='mb-1 w-full flex'>
+				<TabsList
+					className={cn(
+						'mb-4 w-full rounded-xl bg-muted p-1 grid gap-1',
+						canInvite ? 'grid-cols-3' : 'grid-cols-2'
+					)}
+				>
 					{canInvite && (
 						<TabsTrigger
-							className='flex-1 text-center'
+							className='w-full justify-center text-sm font-medium'
 							value='participants'
 						>
 							Пригласить участника
@@ -99,14 +108,14 @@ export function InvitationsGroupModal({
 					)}
 
 					<TabsTrigger
-						className='flex-1 text-center'
+						className='w-full justify-center text-sm font-medium'
 						value='invitations'
 					>
 						Приглашения в группы
 					</TabsTrigger>
 
 					<TabsTrigger
-						className='flex-1 text-center'
+						className='w-full justify-center text-sm font-medium'
 						value='history'
 					>
 						История приглашений

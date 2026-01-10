@@ -47,7 +47,7 @@ export function ChatOrCommentContextMenu({
 		typeof canReply === 'boolean' ? canReply : !mine && context === 'chat'
 
 	return (
-		<DropdownMenuContent className='w-[260px]'>
+		<DropdownMenuContent className='w-[100px]'>
 			{canReplyFinal && onReply && (
 				<>
 					<DropdownMenuItem

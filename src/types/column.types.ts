@@ -21,19 +21,27 @@ export interface IColumnPosition {
 export type TypeColumnFormState = Partial<Omit<IColumn, 'id' | 'updatedAt'>>
 
 export const Colors = [
-	'#EE82EE',
-	'#FA8072',
-	'#CD5C5C',
-	'#9400D3',
-	'#673AB7',
-	'#3F51B5',
-	'#008080',
-	'#1E90FF',
-	'#66CDAA',
-	'#FFEB3B',
-	'#FF8C00',
-	'#9ACD32',
-	'#32CD32',
-	'#4CAF50',
-	'#006400'
+	// Blues / Indigo (спокойные, совместимы с primary)
+  '#DDEBFF',
+  '#CFE3FF',
+  '#BFD7FF',
+  '#A9CBFF',
+
+  // Teal / Mint (подходит вашему канбану)
+  '#D6F5EF',
+  '#BFEFE4',
+  '#A6E7D7',
+  '#8BDEC8',
+
+  // Warm (мягкие тёплые, не кислотные)
+  '#FFE7C2',
+  '#FFD7B3',
+  '#FFE0E0',
+  '#FFD1DD',
+
+  // Violet / Lavender (мягко, без агрессии)
+  '#EADFFF',
+  '#DCCBFF',
+  '#D8E7FF',
+  '#E8F1FF'
 ]

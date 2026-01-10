@@ -119,7 +119,7 @@ export function RightsSettings({ spaceId }: { spaceId: string }) {
 							className='flex items-center justify-between px-2 py-3 hover:bg-blue-50 transition-colors'
 						>
 							{/* Левая часть */}
-							<div className='flex items-center gap-3'>
+							<div className='flex items-center gap-1'>
 								<UserAvatar
 									src={u?.avatar}
 									name={u?.name ?? null}

@@ -203,6 +203,7 @@ export function ProfileForm({
 					)}
 
 					<Button
+						variant='default'
 						type='submit'
 						className='w-full sm:w-auto sm:px-10'
 						disabled={!!isPending}

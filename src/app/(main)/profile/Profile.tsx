@@ -1,4 +1,4 @@
-import toast from 'react-hot-toast'
+'use client'
 
 import { ProfileForm } from '@/components/profile/ProfileForm'
 

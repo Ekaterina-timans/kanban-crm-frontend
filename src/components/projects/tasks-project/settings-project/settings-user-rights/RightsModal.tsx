@@ -4,6 +4,14 @@ import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button/Button'
 import { ModalWrapper } from '@/components/ui/modal/ModalWrapper'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow
+} from '@/components/ui/table/table'
 
 import { IModalProps } from '@/types/modal.types'
 import { ISpaceUser } from '@/types/user.types'
@@ -45,11 +53,13 @@ export function RightsModal({
 		setRights(prev =>
 			prev.map(row => {
 				const updated = { ...row.permissions }
+
 				for (const key of Object.keys(row.permissions)) {
 					const name = `${row.systemCategory}_${key}`
 					updated[key as keyof typeof row.permissions] =
 						userPermissionNames.includes(name)
 				}
+
 				return { ...row, permissions: updated }
 			})
 		)
@@ -91,11 +101,11 @@ export function RightsModal({
 	if (isLoadingRights)
 		return (
 			<ModalWrapper
-				className='w-[700px]'
+				className='w-[760px] max-w-[95vw]'
 				isOpen={isOpen}
 				onClose={onClose}
 			>
-				<p className='text-center text-gray-500 py-6'>
+				<p className='text-center text-muted-foreground py-6'>
 					Загрузка прав пользователя...
 				</p>
 			</ModalWrapper>
@@ -103,70 +113,67 @@ export function RightsModal({
 
 	return (
 		<ModalWrapper
-			className='w-[700px]'
+			className='w-[760px]'
 			isOpen={isOpen}
 			onClose={onClose}
 		>
-			<h2 className='text-lg mb-4 text-center font-semibold text-blue-600'>
+			<h2 className='text-lg font-semibold text-foreground mb-4 text-center'>
 				Редактирование прав доступа — {user.user?.name || user.user?.email}
 			</h2>
 
-			<div className='overflow-x-auto mb-6'>
-				<table className='w-full border border-gray-200 rounded-lg text-sm'>
-					<thead className='bg-blue-50 text-blue-600'>
-						<tr>
-							<th className='p-2 text-left'>Область</th>
-							<th className='p-2'>Чтение</th>
-							<th className='p-2'>Создание</th>
-							<th className='p-2'>Редактирование</th>
-							<th className='p-2'>Удаление</th>
-						</tr>
-					</thead>
-					<tbody>
+			<div className='mb-6'>
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead>Область</TableHead>
+							<TableHead className='text-center'>Чтение</TableHead>
+							<TableHead className='text-center'>Создание</TableHead>
+							<TableHead className='text-center'>Редактирование</TableHead>
+							<TableHead className='text-center'>Удаление</TableHead>
+						</TableRow>
+					</TableHeader>
+
+					<TableBody>
 						{rights.map((row, i) => (
-							<tr
-								key={i}
-								className='border-t hover:bg-blue-50 transition'
-							>
-								<td className='p-2 font-medium text-gray-700'>
-									{row.category}
-								</td>
-								{['read', 'create', 'edit', 'delete'].map(key => (
-									<td
+							<TableRow key={i}>
+								<TableCell className='font-medium'>{row.category}</TableCell>
+
+								{(['read', 'create', 'edit', 'delete'] as const).map(key => (
+									<TableCell
 										key={key}
-										className='text-center p-2'
+										className='text-center'
 									>
-										{row.permissions[key as keyof typeof row.permissions] !==
-										undefined ? (
+										{row.permissions[key] !== undefined ? (
 											<input
 												type='checkbox'
-												checked={
-													row.permissions[
-														key as keyof typeof row.permissions
-													] || false
-												}
-												onChange={() =>
-													toggle(
-														i,
-														key as keyof (typeof rights)[0]['permissions']
-													)
-												}
-												className='w-4 h-4 accent-blue-600 cursor-pointer'
+												checked={row.permissions[key] || false}
+												onChange={() => toggle(i, key)}
+												className='h-4 w-4 cursor-pointer accent-primary'
 											/>
 										) : (
-											<span className='text-gray-300'>—</span>
+											<span className='text-muted-foreground/50'>—</span>
 										)}
-									</td>
+									</TableCell>
 								))}
-							</tr>
+							</TableRow>
 						))}
-					</tbody>
-				</table>
+					</TableBody>
+				</Table>
 			</div>
 
-			<div className='flex justify-between'>
-				<Button onClick={handleSave}>Сохранить</Button>
-				<Button onClick={onClose}>Отмена</Button>
+			<div className='mt-6 flex items-center justify-end gap-3'>
+				<Button
+					variant='default'
+					onClick={handleSave}
+				>
+					Сохранить
+				</Button>
+				<Button
+					variant='secondary'
+					onClick={onClose}
+				>
+					Отмена
+				</Button>
 			</div>
 		</ModalWrapper>
 	)

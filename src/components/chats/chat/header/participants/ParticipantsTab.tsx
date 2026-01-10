@@ -244,7 +244,7 @@ export function ParticipantsTab({
 								)}
 								{permissions.canRemoveParticipant && p.role !== 'owner' && (
 									<Button
-										variant='outline'
+										variant='destructive'
 										size='icon'
 										title='Удалить из чата'
 										onClick={() => remove.mutate({ user_id: p.id })}

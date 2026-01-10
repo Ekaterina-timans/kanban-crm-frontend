@@ -86,16 +86,19 @@ export function ColumnModal({
 
 	return (
 		<ModalWrapper
-			className='w-96'
+			className='w-full max-w-md'
 			isOpen={isOpen}
 			onClose={onClose}
 		>
-			<h2>
+			<h2 className='text-xl font-semibold tracking-tight text-center'>
 				{mode === 'create'
 					? 'Создание новой колонки'
 					: 'Редактирование колонки'}
 			</h2>
-			<form onSubmit={handleSubmit(onSubmit)}>
+			<form
+				onSubmit={handleSubmit(onSubmit)}
+				className='mt-6 space-y-4'
+			>
 				<Field
 					{...register('name', { required: 'Введите наименование колонки' })}
 					placeholder='Наименование колонки'
@@ -116,11 +119,15 @@ export function ColumnModal({
 						onChange={color => setHex(color.hex)}
 					/>
 				</div>
-				<div className='flex justify-between'>
-					<Button type='submit'>
+				<div className='mt-6 flex items-center justify-end gap-3'>
+					<Button
+						variant='default'
+						type='submit'
+					>
 						{mode === 'create' ? 'Создать' : 'Сохранить'}
 					</Button>
 					<Button
+						variant='secondary'
 						type='button'
 						onClick={onClose}
 					>

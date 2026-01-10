@@ -16,6 +16,9 @@ import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
+import { Button } from '@/components/ui/button/Button'
+import { Tooltip } from '@/components/ui/tooltip/Tooltip'
+
 import { IColumnTask } from '@/types/column.types'
 import { Permission } from '@/types/permission.enum'
 import { ITask } from '@/types/task.types'
@@ -167,26 +170,29 @@ export function KanbanView({
 			onDragStart={handleDragStart}
 			onDragEnd={handleDragEnd}
 		>
-			<div className='flex p-6 gap-7 overflow-x-auto'>
-				{currentColumns && currentColumns.length > 0 ? (
-					currentColumns.map(column => (
-						<Column
-							key={column.id}
-							column={column}
-							onEdit={() => openEditModal(column)}
-							renderTask={renderTask}
-						/>
-					))
-				) : (
-					<div></div>
-				)}
+			<div className='flex px-6 py-5 gap-6 overflow-x-auto'>
+				{currentColumns && currentColumns.length > 0
+					? currentColumns.map(column => (
+							<Column
+								key={column.id}
+								column={column}
+								onEdit={() => openEditModal(column)}
+								renderTask={renderTask}
+							/>
+						))
+					: null}
 				{canCreateColumn && (
-					<div
-						className='w-28 h-[48px] flex justify-center items-center border border-black rounded-md bg-zinc-100 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105'
+					<Button
+						type='button'
+						variant='outline'
+						size='icon'
 						onClick={openCreateModal}
+						className='h-12 w-12 shrink-0'
 					>
-						<Plus size={30} />
-					</div>
+						<Tooltip text='Добавить колонку'>
+							<Plus />
+						</Tooltip>
+					</Button>
 				)}
 			</div>
 			<DragOverlay>

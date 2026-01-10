@@ -37,7 +37,15 @@ export function SelectComponent({
 		>
 			<Select.Trigger
 				className={cn(
-					'flex items-center justify-between w-full h-[47px] border border-gray-200 rounded-lg bg-white px-3 text-base text-gray-800 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition',
+					[
+						'flex items-center justify-between w-full h-11',
+						'rounded-lg border border-input bg-background px-3',
+						'text-base text-foreground',
+						'shadow-sm',
+						'transition-[border-color,box-shadow] duration-200',
+						'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+						'disabled:opacity-50 disabled:pointer-events-none'
+					].join(' '),
 					className
 				)}
 			>
@@ -51,7 +59,7 @@ export function SelectComponent({
 				</div>
 
 				<Select.Icon>
-					<ChevronDown className='w-4 h-4 text-gray-500' />
+					<ChevronDown className='w-4 h-4 text-muted-foreground' />
 				</Select.Icon>
 			</Select.Trigger>
 
@@ -60,9 +68,15 @@ export function SelectComponent({
 					position='popper'
 					side='bottom'
 					align='start'
-					className='bg-white border border-gray-200 rounded-md shadow-lg z-50 overflow-hidden'
+					sideOffset={6}
+					className={cn(
+						'z-50 overflow-hidden rounded-lg border border-border bg-popover text-popover-foreground shadow-lg',
+						'data-[state=open]:animate-in data-[state=closed]:animate-out',
+						'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+						'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95'
+					)}
 				>
-					<Select.ScrollUpButton className='flex items-center justify-center py-1 text-gray-400'>
+					<Select.ScrollUpButton className='flex items-center justify-center py-1 text-muted-foreground'>
 						<ChevronUp className='w-4 h-4' />
 					</Select.ScrollUpButton>
 
@@ -73,13 +87,20 @@ export function SelectComponent({
 								key={opt.value}
 								value={opt.value}
 								className={cn(
-									'flex items-center gap-2 px-3 py-2 rounded-md text-gray-800 text-sm cursor-pointer select-none',
-									'hover:bg-blue-50 hover:text-blue-600 focus:bg-blue-100 focus:text-blue-700 outline-none transition'
+									[
+										'relative flex items-center gap-2 px-3 py-2 rounded-md',
+										'text-sm text-foreground cursor-pointer select-none outline-none',
+										'transition-colors',
+										'data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground',
+										'data-[state=checked]:bg-accent/70'
+									].join(' ')
 								)}
 							>
-								{opt.icon && <span className='text-gray-600'>{opt.icon}</span>}
+								{opt.icon && (
+									<span className='text-muted-foreground'>{opt.icon}</span>
+								)}
 								<Select.ItemText>{opt.label}</Select.ItemText>
-								<Select.ItemIndicator className='ml-auto text-blue-600'>
+								<Select.ItemIndicator className='ml-auto text-primary'>
 									<Check className='w-4 h-4' />
 								</Select.ItemIndicator>
 							</Select.Item>

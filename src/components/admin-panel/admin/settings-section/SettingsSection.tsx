@@ -133,9 +133,10 @@ export function SettingsSection() {
 				</div>
 
 				<Button
+					variant='default'
 					type='submit'
 					disabled={isPending}
-					className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium'
+					className='px-4 py-2 transition text-sm font-medium'
 				>
 					{isPending ? 'Сохранение...' : 'Сохранить изменения'}
 				</Button>
@@ -149,9 +150,10 @@ export function SettingsSection() {
 				</p>
 
 				<Button
+					variant='destructive'
 					onClick={handleDelete}
 					disabled={isDeleting}
-					className='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium'
+					className='px-4 py-2 transition text-sm font-medium'
 				>
 					{isDeleting ? 'Удаление...' : 'Удалить группу'}
 				</Button>

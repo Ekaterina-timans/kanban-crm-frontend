@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 
 import { Button } from '@/components/ui/button/Button'
 import Field from '@/components/ui/field/Field'
+import { ScrollArea } from '@/components/ui/scroll/scroll-area'
 
 import { ISpaceProjectProps } from '@/types/space.types'
 
@@ -36,55 +37,59 @@ export function SidebarProject({
 	}, [spaces, query])
 
 	return (
-		<aside className='h-full bg-white border-r border-slate-200 overflow-hidden'>
+		<aside className='h-full bg-card border-r border-border'>
 			<div
 				className={[
 					'flex h-full flex-col p-3 transition-opacity duration-200',
 					collapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'
 				].join(' ')}
 			>
-				<div className='mt-3'>
-					<Field
-						placeholder='Поиск...'
-						value={query}
-						onChange={e => setQuery(e.target.value)}
-						leftIcon={Search}
-						rightIcon={X}
-						onRightIconClick={() => setQuery('')}
-					/>
-				</div>
-				<Button
-					className='mt-3 w-full h-10 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 flex items-center justify-center rounded-lg'
-					onClick={() => setModalOpen(true)}
-				>
-					<Plus
-						className='mr-2'
-						size={18}
-					/>
-					<span className='text-sm'>Добавить пространство</span>
-				</Button>
-
-				<div>
-					{loading && <div className='text-center py-2'>Загрузка...</div>}
-					{!loading && filteredSpaces.length === 0 && query && (
-						<div className='text-center py-3 text-slate-500'>
-							Ничего не найдено по «{query}»
-						</div>
-					)}
-
-					{!loading && filteredSpaces.length > 0 && (
-						<ListCardsProjects
-							spaces={filteredSpaces}
-							selectedSpaceId={selectedSpaceId}
-							onSelectSpace={id => onSelectSpace(id)}
+				<div className='min-h-0 flex-1 flex flex-col'>
+					<div className='mt-3'>
+						<Field
+							placeholder='Поиск...'
+							value={query}
+							onChange={e => setQuery(e.target.value)}
+							leftIcon={Search}
+							rightIcon={X}
+							onRightIconClick={() => setQuery('')}
 						/>
-					)}
-				</div>
+					</div>
+					<Button
+						variant='outline'
+						className='mt-3 w-full h-10 justify-center gap-2 rounded-xl'
+						onClick={() => setModalOpen(true)}
+					>
+						<Plus
+							className='mr-2'
+							size={18}
+						/>
+						<span className='text-sm'>Добавить пространство</span>
+					</Button>
 
-				<SpaceModal
-					isOpen={isModalOpen}
-					onClose={() => setModalOpen(false)}
-				/>
+					<ScrollArea className='min-h-0 flex-1 mt-3'>
+						{loading && <div className='text-center py-2'>Загрузка...</div>}
+
+						{!loading && filteredSpaces.length === 0 && query && (
+							<div className='text-center py-3 text-muted-foreground'>
+								Ничего не найдено по «{query}»
+							</div>
+						)}
+
+						{!loading && filteredSpaces.length > 0 && (
+							<ListCardsProjects
+								spaces={filteredSpaces}
+								selectedSpaceId={selectedSpaceId}
+								onSelectSpace={id => onSelectSpace(id)}
+							/>
+						)}
+					</ScrollArea>
+
+					<SpaceModal
+						isOpen={isModalOpen}
+						onClose={() => setModalOpen(false)}
+					/>
+				</div>
 			</div>
 		</aside>
 	)

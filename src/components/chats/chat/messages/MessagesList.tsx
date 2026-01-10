@@ -138,11 +138,11 @@ export function MessagesList({
 		>
 			<div className='space-y-4 py-4'>
 				{isLoading && !messages.length && (
-					<div className='text-sm text-slate-500'>Загрузка…</div>
+					<div className='text-sm text-muted-foreground'>Загрузка…</div>
 				)}
 
 				{loadingOlder && (
-					<div className='text-xs text-slate-400 text-center'>
+					<div className='text-xs text-muted-foreground text-center'>
 						Загружаем ранние сообщения…
 					</div>
 				)}
@@ -154,7 +154,7 @@ export function MessagesList({
 								key={row.id}
 								className='sticky top-2 z-10 flex justify-center'
 							>
-								<span className='px-3 py-1 text-xs rounded-full bg-slate-200 text-slate-700'>
+								<span className='px-3 py-1 text-xs rounded-full bg-muted text-muted-foreground border border-border shadow-sm'>
 									{row.label}
 								</span>
 							</div>
@@ -198,8 +198,15 @@ export function MessagesList({
 			{showScrollButton && (
 				<Button
 					onClick={scrollToBottom}
-					className='absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-3 shadow-lg opacity-80 hover:opacity-100 transition-opacity'
-					size='sm'
+					type='button'
+					variant='secondary'
+					size='icon'
+					className={cn(
+						'absolute bottom-4 right-4 rounded-full shadow-lg',
+						'border border-border',
+						'bg-card text-foreground hover:bg-accent',
+						'opacity-90 hover:opacity-100 transition'
+					)}
 				>
 					<ArrowDown />
 				</Button>

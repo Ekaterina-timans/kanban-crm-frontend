@@ -50,7 +50,7 @@ export function PanelSettings({
 		>
 			<SheetContent
 				side='right'
-				className='w-[500px] sm:max-w-[500px]'
+				className='w-[500px] sm:max-w-[500px] px-3'
 			>
 				<SheetHeader>
 					<SheetTitle>Настройки проекта</SheetTitle>

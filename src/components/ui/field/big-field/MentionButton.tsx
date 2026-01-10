@@ -54,7 +54,7 @@ export function MentionButton({
 			<button
 				type='button'
 				onClick={() => setShowMentionList(!showMentionList)}
-				className='absolute top-4 right-8 flex items-start pr-3 text-slate-500 hover:text-slate-700'
+				className='absolute top-4 right-8 flex items-start pr-3 text-muted-foreground hover:text-primary transition-colors'
 				title='Упомянуть пользователя'
 			>
 				<AtSign size={iconSize} />
@@ -62,14 +62,14 @@ export function MentionButton({
 
 			{showMentionList && (
 				<div
-					className='absolute bottom-full mb-2 right-0 z-20 bg-white border rounded-md shadow-md w-48 max-h-56 overflow-y-auto'
+					className='absolute bottom-full mb-2 right-0 z-20 bg-popover text-popover-foreground border border-border rounded-md shadow-md w-48 max-h-56 overflow-y-auto'
 					onMouseDown={e => {
 						e.stopPropagation()
 						e.preventDefault()
 					}}
 				>
 					{mentionMembers.length === 0 ? (
-						<div className='text-sm text-gray-400 p-2 text-center'>
+						<div className='text-sm text-muted-foreground p-2 text-center'>
 							Нет участников
 						</div>
 					) : (
@@ -77,7 +77,7 @@ export function MentionButton({
 							<button
 								key={m.id}
 								onClick={() => insertMention(m)}
-								className='w-full text-left px-3 py-2 text-sm hover:bg-slate-100'
+								className='w-full text-left px-3 py-2 text-sm hover:bg-accent'
 							>
 								{m.name || m.email}
 							</button>

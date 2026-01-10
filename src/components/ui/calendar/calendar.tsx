@@ -19,8 +19,8 @@ function Calendar({
 }: CalendarProps) {
 	return (
 		<DayPicker
-      locale={ru}
-      weekStartsOn={1} 
+			locale={ru}
+			weekStartsOn={1}
 			showOutsideDays={showOutsideDays}
 			className={cn('p-3', className)}
 			classNames={{
@@ -30,8 +30,8 @@ function Calendar({
 				caption_label: 'text-sm font-medium',
 				nav: 'space-x-1 flex items-center',
 				nav_button: cn(
-					buttonVariants({ variant: 'outline' }),
-					'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
+					buttonVariants({ variant: 'ghost', size: 'icon' }),
+					'h-7 w-7 text-muted-foreground hover:text-foreground'
 				),
 				nav_button_previous: 'absolute left-1',
 				nav_button_next: 'absolute right-1',

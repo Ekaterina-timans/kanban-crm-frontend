@@ -17,9 +17,10 @@ import { useSelectedChat } from '@/store/useSelectedChat'
 import { useMyChatRole } from '@/hooks/chat/useMyChatRole'
 import { useDeleteMessage } from '@/hooks/message/useDeleteMessage'
 
+import { formatTime } from '@/utils/date-utils'
+
 import { colorForId } from './colorName'
 import { cn } from '@/lib/utils'
-import { formatTime } from '@/utils/date-utils'
 
 type BubbleProps = {
 	message: IMessage
@@ -83,15 +84,20 @@ export function MessageBubble({
 				>
 					<div
 						className={cn(
-							'relative max-w-xs rounded-lg px-3 py-2 text-sm',
-							mine ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-900'
+							'relative max-w-xs rounded-xl px-3 py-2 text-sm shadow-sm',
+							mine
+								? 'bg-primary text-primary-foreground'
+								: 'bg-muted text-foreground border border-border'
 						)}
 					>
 						{/* Имя автора вверху пузыря (как в VK/Telegram) */}
 						{!mine && (
 							<div
 								className='mb-1 font-semibold leading-none'
-								style={{ color: authorColor }}
+								style={{
+									color: authorColor,
+									opacity: mine ? 0.9 : 1
+								}}
 							>
 								{authorName}
 							</div>
@@ -101,8 +107,10 @@ export function MessageBubble({
 						{reply && (
 							<div
 								className={cn(
-									'mb-2 rounded-md p-2 text-xs',
-									mine ? 'bg-blue-400/40' : 'bg-gray-300'
+									'mb-2 rounded-lg p-2 text-xs',
+									mine
+										? 'bg-primary-foreground/10'
+										: 'bg-background/60 border border-border'
 								)}
 							>
 								<div className='font-medium truncate'>{replyAuthor}</div>
@@ -130,7 +138,7 @@ export function MessageBubble({
 												target='_blank'
 												rel='noreferrer'
 												title={att.original_name}
-												className='block overflow-hidden rounded-lg border bg-white'
+												className='block overflow-hidden rounded-lg border border-border bg-card'
 												onClick={e => e.stopPropagation()}
 											>
 												<img
@@ -148,7 +156,7 @@ export function MessageBubble({
 											target='_blank'
 											rel='noreferrer'
 											title={att.original_name}
-											className='inline-flex max-w-[260px] items-center gap-2 rounded-lg border bg-white px-3 py-2 text-xs shadow-sm'
+											className='inline-flex max-w-[260px] items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-xs shadow-sm text-foreground'
 											onClick={e => e.stopPropagation()}
 										>
 											<div className='flex h-7 w-7 items-center justify-center rounded-full bg-slate-200 text-[10px] font-semibold'>
@@ -165,8 +173,10 @@ export function MessageBubble({
 						{m.content && (
 							<div
 								className={cn(
-									'text-sm leading-snug whitespace-pre-line break-words',
-									mine ? 'text-white' : 'text-gray-900'
+									'chat-message-content text-sm leading-snug whitespace-pre-line break-words',
+									mine
+										? 'chat-message-content--mine'
+										: 'chat-message-content--other'
 								)}
 							>
 								{renderMentions(m.content, m.mentioned_users ?? [])}
@@ -176,8 +186,10 @@ export function MessageBubble({
 						{/* Время */}
 						<span
 							className={cn(
-								'mt-1 block text-xs opacity-70',
-								mine && 'text-right'
+								'mt-1 block text-[11px]',
+								mine
+									? 'text-primary-foreground/70 text-right'
+									: 'text-muted-foreground'
 							)}
 						>
 							{time}

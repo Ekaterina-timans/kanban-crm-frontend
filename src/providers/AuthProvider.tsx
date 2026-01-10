@@ -1,3 +1,6 @@
+'use client'
+
+import { useQueryClient } from '@tanstack/react-query'
 import { usePathname, useRouter } from 'next/navigation'
 import React, {
 	ReactNode,
@@ -13,8 +16,8 @@ import { IUser } from '@/types/user.types'
 import { useTimezoneStore } from '@/store/useTimezoneStore'
 
 import { authService } from '@/services/auth.service'
-import { userPreferencesService } from '@/services/user-preferences.service'
 import { groupService } from '@/services/group.service'
+import { userPreferencesService } from '@/services/user-preferences.service'
 
 interface AuthContextProps {
 	user: IUser | null
@@ -39,6 +42,7 @@ export const useAuth = () => {
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+	const queryClient = useQueryClient()
 	const [user, setUser] = useState<IUser | null>(null)
 	const [groups, setGroups] = useState<IGroup[]>([])
 	const [currentGroupRole, setCurrentGroupRole] = useState<
@@ -51,7 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	const router = useRouter()
 	const pathname = usePathname()
-	//
+
 	const pickFirstGroup = (gs: IGroup[]) => (gs.length ? String(gs[0].id) : null)
 
 	const applyCurrentGroup = (id: string | null) => {
@@ -110,6 +114,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			setUser(null)
 			setGroups([])
 			setIsAuthenticated(false)
+			setCurrentGroupRole(null)
 			applyCurrentGroup(null)
 		} finally {
 			setIsLoading(false)
@@ -130,14 +135,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	const logout = async () => {
 		await authService.logout()
+
+		queryClient.removeQueries({ queryKey: ['auth', 'profile'] })
 		setUser(null)
 		setGroups([])
 		setIsAuthenticated(false)
+		setCurrentGroupRole(null)
 		setCurrentGroupId(null)
-	}
-
-	if (isLoading) {
-		return <div>Загрузка...</div>
 	}
 
 	return (

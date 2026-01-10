@@ -20,59 +20,75 @@ const Field = forwardRef<HTMLInputElement, FieldProps>(
 		},
 		ref
 	) => {
+		const hasLeft = !!Icon || !!LeftIcon
+		const hasRight = !!RightIcon
+		const hasError = !!error?.message
+
 		return (
-			// className - класс который будет приходить из вне, если захотим как-то кастомизировать
-			<label className={cn('flex flex-col relative', className)}>
+			<label className={cn('flex flex-col gap-1', className)}>
 				{label && (
-					<span className='-mb-1 text-base font-medium text-gray-700'>
+					<span className='text-sm font-medium text-muted-foreground'>
 						{label}
 					</span>
 				)}
-				<div className='flex items-center'>
-					{/* ставим иконку */}
+
+				<div className='relative'>
+					{/* статичная иконка Icon */}
 					{Icon && (
-						<div className='mr-3 text-[#585654] transition-colors duration-300 ease-linear'>
+						<span className='absolute inset-y-0 left-3 flex items-center text-muted-foreground pointer-events-none'>
 							<Icon />
-						</div>
+						</span>
 					)}
-					{/* чтобы получить данные, зарегитсрировать */}
+
 					<input
 						ref={ref}
 						{...rest}
+						aria-invalid={hasError}
 						className={cn(
-							'flex w-full rounded-lg border-2 border-gray-300 bg-white/0 p-1.5 pr-9 text-base outline-none placeholder:text-slate-600 transition-colors duration-500 focus:border-primary',
-							LeftIcon ? 'pl-9' : '',
-							error ? 'border-red-600 mb-2' : ''
+							'w-full h-11 rounded-xl border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground shadow-sm',
+							'transition-[border-color,box-shadow] duration-200',
+							'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+							'border-input',
+							hasLeft && 'pl-10',
+							hasRight && 'pr-10',
+							hasError && 'border-destructive focus-visible:ring-destructive'
 						)}
 					/>
+
+					{/* левая кнопка-иконка */}
 					{LeftIcon && (
 						<button
 							type='button'
 							onClick={onLeftIconClick}
 							className={cn(
-								'absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 pointer-events-none',
+								'absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground hover:text-foreground transition-colors',
+								!onLeftIconClick && 'pointer-events-none',
 								leftIconClassName
 							)}
+							aria-label='left action'
+							tabIndex={onLeftIconClick ? 0 : -1}
 						>
 							<LeftIcon size={iconSize} />
 						</button>
 					)}
+
+					{/* правая кнопка-иконка */}
 					{RightIcon && (
 						<button
 							type='button'
-							aria-label='action'
+							aria-label='right action'
 							onClick={onRightIconClick}
-							className='absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-slate-700'
-							tabIndex={-1}
+							className='absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors'
+							tabIndex={onRightIconClick ? 0 : -1}
 						>
 							<RightIcon className='h-4 w-4' />
 						</button>
 					)}
 				</div>
-				{error && (
-					<div className='absolute -bottom-3 left-2 text-red-600 text-sm'>
-						{error.message}
-					</div>
+
+				{/* Ошибка обычным блоком — НЕ absolute */}
+				{hasError && (
+					<div className='text-sm text-destructive'>{error?.message}</div>
 				)}
 			</label>
 		)
@@ -80,5 +96,4 @@ const Field = forwardRef<HTMLInputElement, FieldProps>(
 )
 
 Field.displayName = 'Field'
-
 export default Field

@@ -18,13 +18,22 @@ export function Mention({ user }: { user: any }) {
 						fallbackClassName='text-black text-xs font-medium'
 					/>
 					<div className='flex flex-col'>
-						<span className='font-medium text-white text-sm'>{user.name}</span>
-						<span className='text-gray-300 text-xs'>{user.email}</span>
+						<span className='font-medium text-foreground text-sm'>
+							{user.name}
+						</span>
+						<span className='text-muted-foreground text-xs'>{user.email}</span>
 					</div>
 				</div>
 			}
 		>
-			<span className='text-blue-600 font-medium cursor-pointer hover:underline hover:text-blue-700 transition-colors duration-100'>
+			<span
+				className={[
+					'mention',
+					'font-medium cursor-pointer',
+					'transition-opacity duration-150',
+					'hover:underline'
+				].join(' ')}
+			>
 				@{displayName}
 			</span>
 		</Tooltip>

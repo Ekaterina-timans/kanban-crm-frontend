@@ -17,23 +17,27 @@ export function MainChat() {
 		loadOlder,
 		isLoading: isMsgsLoading
 	} = useChatMessages(selectedChatId)
-	const { role, permissions, isLoading: isRoleLoading } = useMyChatRole(selectedChatId, chat?.type)
+	const {
+		role,
+		permissions,
+		isLoading: isRoleLoading
+	} = useMyChatRole(selectedChatId, chat?.type)
 
 	if (!selectedChatId)
 		return (
-			<div className='flex items-center justify-center flex-1'>
+			<div className='flex items-center justify-center flex-1 text-muted-foreground'>
 				Чат не выбран
 			</div>
 		)
 	if (isChatLoading)
 		return (
-			<div className='flex items-center justify-center flex-1'>
+			<div className='flex items-center justify-center flex-1 text-muted-foreground'>
 				Загрузка чата…
 			</div>
 		)
 	if (!chat)
 		return (
-			<div className='flex items-center justify-center flex-1'>
+			<div className='flex items-center justify-center flex-1 text-muted-foreground'>
 				Чат не найден
 			</div>
 		)

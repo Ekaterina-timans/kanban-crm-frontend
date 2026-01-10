@@ -3,15 +3,14 @@ import { useRouter } from "next/navigation"
 import toast from 'react-hot-toast'
 
 import { authService } from '@/services/auth.service'
+import { useAuth } from '@/providers/AuthProvider'
 
 export function useLogout() {
-	const queryClient = useQueryClient()
 	const router = useRouter()
 
 	const { mutate: logout, isPending } = useMutation({
 		mutationFn: authService.logout,
 		onSuccess() {
-			queryClient.removeQueries({ queryKey: ['auth', 'profile'] })
 			toast.success('Вы вышли из аккаунта!')
 			router.push('/auth')
 		},

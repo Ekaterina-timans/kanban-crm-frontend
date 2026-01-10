@@ -1,10 +1,12 @@
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button/Button'
 import Field from '@/components/ui/field/Field'
+import { SelectComponent } from '@/components/ui/select/SelectComponent'
+
+import { useAuth } from '@/providers/AuthProvider'
 
 import { useInviteToGroup } from '@/hooks/group-invitations/useInviteToGroup'
-import { useAuth } from '@/providers/AuthProvider'
 
 interface IAddParticipantForm {
 	email: string
@@ -22,9 +24,18 @@ export function AddingParticipant() {
 	const { inviteToGroup, isPending } = useInviteToGroup()
 	const { currentGroupId } = useAuth()
 
+	const roleOptions = [
+		{ value: 'admin', label: 'Админ' },
+		{ value: 'member', label: 'Участник' }
+	]
+
 	const onSubmit = form.handleSubmit(data => {
 		if (!currentGroupId) return
-		inviteToGroup({ group_id: String(currentGroupId), email: data.email, role: data.role })
+		inviteToGroup({
+			group_id: String(currentGroupId),
+			email: data.email,
+			role: data.role
+		})
 		form.reset()
 	})
 
@@ -41,13 +52,20 @@ export function AddingParticipant() {
 				className='mb-4'
 			/>
 			<div className='mb-6'>
-				<select
-					{...form.register('role', { required: true })}
-					className='w-full p-2 rounded border border-gray-300 focus:outline-none'
-				>
-					<option value='admin'>Админ</option>
-					<option value='member'>Участник</option>
-				</select>
+				<Controller
+					control={form.control}
+					name='role'
+					rules={{ required: true }}
+					render={({ field }) => (
+						<SelectComponent
+							options={roleOptions}
+							placeholder='Выберите роль'
+							selectedValue={field.value}
+							onChange={field.onChange}
+							disabled={isPending}
+						/>
+					)}
+				/>
 			</div>
 			<Button
 				type='submit'

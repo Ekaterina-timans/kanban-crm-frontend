@@ -32,3 +32,18 @@ export interface ISpaceProjectProps {
   onSelectSpace: (id: string) => void
   loading?: boolean
 }
+
+export type TaskSortField = 'created_at' | 'due_date'
+export type SortOrder = 'asc' | 'desc'
+
+export interface ITaskFilters {
+	task_q?: string
+	assignee_id?: number
+	status_id?: number
+	priority_id?: number
+	due_from?: string
+	due_to?: string
+
+	task_sort?: TaskSortField
+	task_order?: SortOrder
+}

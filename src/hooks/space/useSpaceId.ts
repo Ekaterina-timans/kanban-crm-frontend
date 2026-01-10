@@ -1,18 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-import { ISpaceIdResponse } from '@/types/space.types'
+import { ISpaceIdResponse, ITaskFilters } from '@/types/space.types'
 
 import { spaceService } from '@/services/space.service'
 
-export function useSpaceId(key?: string | null) {
+export function useSpaceId(key?: string | null, filters?: ITaskFilters) {
+	const filtersKey = useMemo(() => JSON.stringify(filters ?? {}), [filters])
+
 	const { data, isLoading } = useQuery({
-		queryKey: ['spacesId', key],
+		queryKey: ['spacesId', key, filtersKey],
 		queryFn: () => {
 			if (!key) {
 				return Promise.reject(new Error('Key is undefined'))
 			}
-			return spaceService.getInfoSpace(key)
+			return spaceService.getInfoSpace(key, filters)
 		},
 		enabled: !!key
 	})

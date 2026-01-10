@@ -35,14 +35,19 @@ export function ListGroupsModal({ isOpen, onClose }: IModalProps) {
 		<ModalWrapper
 			isOpen={isOpen}
 			onClose={onClose}
+			className='w-full max-w-3xl'
 		>
 			<button
-				className='absolute top-4 right-4 text-muted-foreground hover:text-black transition-colors'
+				type='button'
+				className='absolute top-4 right-4 rounded-lg p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors'
+				aria-label='Закрыть'
 				onClick={onClose}
 			>
 				<X className='w-5 h-5' />
 			</button>
-			<h2 className='text-lg mb-4 text-center font-bold'>Ваши группы</h2>
+			<h2 className='text-xl font-semibold text-foreground text-center mb-4'>
+				Ваши группы
+			</h2>
 			{isLoading ? (
 				<div className='text-center py-6'>Загрузка...</div>
 			) : (

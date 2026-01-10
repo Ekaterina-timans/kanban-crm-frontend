@@ -51,7 +51,7 @@ export const BigField = forwardRef<HTMLTextAreaElement, BigFieldProps>(
 		return (
 			<label className={cn('flex flex-col relative', className)}>
 				{label && (
-					<span className='-mb-1 text-base font-medium text-gray-700'>
+					<span className='-mb-1 text-base font-medium text-foreground'>
 						{label}
 					</span>
 				)}
@@ -62,7 +62,7 @@ export const BigField = forwardRef<HTMLTextAreaElement, BigFieldProps>(
 							type='button'
 							onClick={onLeftIconClick}
 							className={cn(
-								'absolute top-4 left-0 flex items-start pl-3 text-slate-500 pointer-events-auto',
+								'absolute top-4 left-0 flex items-start pl-3 text-muted-foreground pointer-events-auto transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md',
 								leftIconClassName
 							)}
 						>
@@ -101,18 +101,16 @@ export const BigField = forwardRef<HTMLTextAreaElement, BigFieldProps>(
 						maxLength={500}
 						{...rest}
 						className={cn(
-							'mt-2 flex w-full items-center justify-center rounded-lg border-2 border-gray-300 bg-white/0 p-2 text-base outline-none placeholder:text-slate-600 duration-500 transition-colors focus:border-primary',
+							'mt-2 flex w-full items-center justify-center rounded-lg border border-input bg-background p-2 text-base text-foreground outline-none placeholder:text-muted-foreground shadow-sm transition-[border-color,box-shadow] duration-200 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
 							LeftIcon ? 'pl-10' : '',
-							showEmojiPicker ? 'pr-10' : '',
-							error ? 'border-red-600 mb-2' : ''
+							showEmojiPicker || showMentions ? 'pr-16' : '',
+							error ? 'border-destructive focus-visible:ring-destructive' : ''
 						)}
 					/>
 				</div>
 
 				{error && (
-					<div className='absolute -bottom-5 left-9 text-red-600 text-xs'>
-						{error.message}
-					</div>
+					<div className='mt-1 text-sm text-destructive'>{error.message}</div>
 				)}
 			</label>
 		)

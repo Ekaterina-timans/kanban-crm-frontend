@@ -1,4 +1,4 @@
-import { ISpaceResponse, TypeSpaceFormState } from '@/types/space.types'
+import { ISpaceIdResponse, ISpaceResponse, ITaskFilters, TypeSpaceFormState } from '@/types/space.types'
 
 import { axiosRequest } from '@/api/interceptors'
 
@@ -21,13 +21,31 @@ class SpaceService {
 		return response
 	}
 
-	async getInfoSpace(spaceId: string) {
-		const response = await axiosRequest.get(`${this.BASE_URL}/${spaceId}`)
+	async getInfoSpace(spaceId: string, filters?: ITaskFilters): Promise<ISpaceIdResponse> {
+		const params = new URLSearchParams()
+
+		if (filters) {
+			for (const [key, value] of Object.entries(filters)) {
+				if (value === undefined || value === null) continue
+				if (typeof value === 'string' && value.trim() === '') continue
+				params.append(key, String(value))
+			}
+		}
+
+		const url = params.toString()
+			? `${this.BASE_URL}/${spaceId}?${params.toString()}`
+			: `${this.BASE_URL}/${spaceId}`
+
+		const response = await axiosRequest.get(url)
 		const data = response.data
+
 		return {
 			...data,
+			groupId: String(data.group_id),
 			backgroundColor: data.background_color,
-			backgroundImage: data.background_image
+			backgroundImage: data.background_image,
+			space_users: data.space_users,
+			columns: data.columns ?? []
 		}
 	}
 

@@ -8,17 +8,17 @@ export function MenuItem({ item }: { item: IMenuItem }) {
 	const isActive = pathname === item.link
 
 	return (
-		<div
+		<Link
+			href={item.link}
 			className={[
-				'transition-colors duration-200 cursor-pointer h-20 flex items-center justify-center text-center w-60 rounded-sm',
+				'px-5 py-2 rounded-xl transition-colors',
+				'text-lg font-medium',
 				isActive
-					? 'bg-blue-200 text-slate-900'
-					: 'hover:bg-[#eff8fd] text-slate-700'
+					? 'bg-primary/15 text-foreground'
+					: 'text-muted-foreground hover:bg-accent hover:text-foreground'
 			].join(' ')}
 		>
-			<Link href={item.link}>
-				<span className='text-2xl font-medium'>{item.name}</span>
-			</Link>
-		</div>
+			{item.name}
+		</Link>
 	)
 }

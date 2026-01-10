@@ -6,14 +6,13 @@ import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button/Button'
 import Field from '@/components/ui/field/Field'
-
+import { BigField } from '@/components/ui/field/big-field/BigField'
 
 import { Colors } from '@/types/column.types'
 import { ISpaceForm } from '@/types/modal.types'
 import { ISpaceResponse, TypeSpaceFormState } from '@/types/space.types'
 
 import { useUpdateSpace } from '@/hooks/space/useUpdateSpace'
-import { BigField } from '@/components/ui/field/big-field/BigField'
 
 export function SpaceSettings({ items }: { items: ISpaceResponse }) {
 	const {
@@ -29,12 +28,12 @@ export function SpaceSettings({ items }: { items: ISpaceResponse }) {
 			name: items.name,
 			description: items.description,
 			backgroundImage: null,
-			backgroundColor: items.backgroundColor || '#66CDAA'
+			backgroundColor: items.backgroundColor || '#DDEBFF'
 		}
 	})
 
 	const [backgroundColor, setBackgroundColor] = useState<string>(
-		items.backgroundColor || '#66CDAA'
+		items.backgroundColor || '#DDEBFF'
 	)
 	const [useColor, setUseColor] = useState<boolean>(
 		!!items.backgroundImage ? false : true
@@ -161,6 +160,7 @@ export function SpaceSettings({ items }: { items: ISpaceResponse }) {
 					</div>
 				)}
 				<Button
+					variant='default'
 					type='submit'
 					className='btn mt-4'
 					disabled={isPending}

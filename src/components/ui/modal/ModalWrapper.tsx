@@ -51,14 +51,25 @@ export function ModalWrapper({
 
 	return (
 		<div
-			className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20'
+			className='fixed inset-0 z-50 flex items-center justify-center p-4'
 			onMouseDown={handleBackdropClick}
 			tabIndex={-1}
 		>
+			<div className='absolute inset-0 bg-black/40 backdrop-blur-[2px]' />
+
 			<div
-				className={`relative bg-white rounded-lg p-6 shadow-lg max-w-full ${className || ''}`}
 				ref={modalRef}
 				onMouseDown={e => e.stopPropagation()}
+				className={[
+					'relative',
+					className ? '' : 'w-full max-w-md',
+					'bg-card text-card-foreground',
+					'rounded-2xl border border-border',
+					'shadow-xl',
+					'p-4',
+					'animate-in fade-in-0 zoom-in-95',
+					className || ''
+				].join(' ')}
 			>
 				{children}
 			</div>

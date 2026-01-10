@@ -160,11 +160,8 @@ export const ChecklistList = ({
 										<div className='flex items-center gap-2 justify-start pl-6'>
 											<div className='w-[150px] flex-shrink-0'>
 												<CalendarComponent
-													placeholder={
-														item.due_date
-															? formatDateForCard(item.due_date)
-															: 'Дата'
-													}
+													value={item.due_date ? new Date(item.due_date) : null}
+													placeholder='Дата'
 													onDateChange={date =>
 														onChangeDate(list.id, item.id, date)
 													}

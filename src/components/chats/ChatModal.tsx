@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 
 import { useAuth } from '@/providers/AuthProvider'
 
+import { ChatType } from '@/types/chat.type'
 import { IGroupMember } from '@/types/group.types'
 import { IModalProps } from '@/types/modal.types'
 
@@ -13,7 +14,6 @@ import { useDebounced } from '@/hooks/useDebounced'
 import { Button } from '../ui/button/Button'
 import Field from '../ui/field/Field'
 import { ModalWrapper } from '../ui/modal/ModalWrapper'
-import { ChatType } from '@/types/chat.type'
 
 export function ChatModal({ isOpen, onClose }: IModalProps) {
 	const { currentGroupId, user } = useAuth()
@@ -92,31 +92,37 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 		<ModalWrapper
 			isOpen={isOpen}
 			onClose={handleClose}
-			className='w-[880px]'
+			className='max-w-[880px]'
 		>
 			<div className='flex items-start justify-between'>
-				<h2 className='text-2xl font-semibold mb-4'>Создать чат</h2>
+				<h2 className='text-2xl font-semibold'>Создать чат</h2>
 				<button
+					type='button'
 					onClick={handleClose}
-					className='text-slate-500 hover:text-slate-700'
+					className='absolute top-4 right-4 rounded-lg p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors'
+					aria-label='Закрыть'
 				>
 					<X className='w-5 h-5' />
 				</button>
 			</div>
 
-			<div className='grid grid-cols-2 gap-6'>
+			<div className='mt-4 h-px bg-border' />
+
+			<div className='mt-6 grid grid-cols-2 gap-6'>
 				{/* Левая колонка */}
 				<div>
-					<div className='mb-3 text-slate-700 font-medium'>Тип чата</div>
-					<div className='inline-flex rounded-lg border border-slate-300 p-1 mb-4 bg-white'>
+					<div className='mb-2 text-sm font-medium text-foreground'>
+						Тип чата
+					</div>
+					<div className='inline-flex rounded-xl border border-border bg-background p-1 mb-4 shadow-sm'>
 						<button
 							type='button'
 							onClick={() => setChatType('group')}
 							className={[
-								'px-4 py-1 rounded-md text-sm font-medium',
+								'px-4 py-1.5 rounded-lg text-sm font-medium transition-colors',
 								chatType === 'group'
-									? 'bg-blue-600 text-white'
-									: 'text-slate-700 hover:bg-slate-100'
+									? 'bg-primary text-primary-foreground shadow-sm'
+									: 'text-muted-foreground hover:bg-accent hover:text-foreground'
 							].join(' ')}
 						>
 							Беседа
@@ -128,10 +134,10 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 								setSelected(prev => (prev[0] ? [prev[0]] : []))
 							}}
 							className={[
-								'px-4 py-1 rounded-md text-sm font-medium',
+								'px-4 py-1.5 rounded-lg text-sm font-medium transition-colors',
 								chatType === 'direct'
-									? 'bg-blue-600 text-white'
-									: 'text-slate-700 hover:bg-slate-100'
+									? 'bg-primary text-primary-foreground shadow-sm'
+									: 'text-muted-foreground hover:bg-accent hover:text-foreground'
 							].join(' ')}
 						>
 							Личный
@@ -140,7 +146,7 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 
 					{chatType === 'group' && (
 						<>
-							<div className='mb-2 text-slate-700 font-medium'>
+							<div className='mb-2 text-sm font-medium text-foreground'>
 								Название беседы
 							</div>
 							<Field
@@ -157,9 +163,9 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 							{selected.map(s => (
 								<span
 									key={s.id}
-									className='inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 py-1 text-sm'
+									className='inline-flex items-center gap-2 rounded-full bg-muted px-2.5 py-1.5 text-sm border border-border'
 								>
-									<span className='inline-flex h-6 w-6 items-center justify-center rounded-full bg-pink-200 text-slate-700'>
+									<span className='inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-primary font-semibold'>
 										{String(s.name ?? s.email)
 											.charAt(0)
 											.toUpperCase()}
@@ -168,7 +174,7 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 									<button
 										type='button'
 										onClick={() => removeMember(s.id)}
-										className='text-slate-500 hover:text-slate-700'
+										className='rounded-full p-1 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors'
 										aria-label='remove'
 									>
 										<X className='w-4 h-4' />
@@ -181,7 +187,9 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 
 				{/* Правая колонка */}
 				<div>
-					<div className='mb-2 text-slate-700 font-medium'>Участники</div>
+					<div className='mb-2 text-sm font-medium text-foreground'>
+						Участники
+					</div>
 					<Field
 						placeholder='Поиск по имени или почте…'
 						value={query}
@@ -194,7 +202,7 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 
 					<div className='max-h-80 overflow-y-auto pe-1'>
 						{isLoading || isFetching ? (
-							<div className='text-sm text-slate-500'>Загрузка…</div>
+							<div className='text-sm text-muted-foreground'>Загрузка…</div>
 						) : list.length ? (
 							<ul className='space-y-2'>
 								{list.map(u => {
@@ -204,11 +212,11 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 									return (
 										<li
 											key={u.id}
-											className='flex items-center justify-between rounded-md border border-slate-200 px-3 py-2'
+											className='flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:bg-accent/60'
 										>
 											<div className='flex items-center gap-3'>
-												<div className='h-9 w-9 rounded-full bg-slate-200 flex items-center justify-center'>
-													<span className='text-slate-700 font-medium'>
+												<div className='h-9 w-9 rounded-full bg-muted flex items-center justify-center'>
+													<span className='text-foreground font-medium'>
 														{String(u.name ?? u.email)
 															.charAt(0)
 															.toUpperCase()}
@@ -218,7 +226,7 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 													<div className='text-sm font-medium'>
 														{u.name ?? u.email}
 													</div>
-													<div className='text-xs text-slate-500'>
+													<div className='text-xs text-muted-foreground'>
 														{u.email}
 													</div>
 												</div>
@@ -228,7 +236,7 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 												<button
 													type='button'
 													onClick={() => removeMember(u.id)}
-													className='text-blue-600 hover:underline text-sm'
+													className='text-primary hover:underline text-sm'
 												>
 													Убрать
 												</button>
@@ -238,8 +246,10 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 													onClick={() => addMember(u)}
 													disabled={disabled}
 													className={[
-														'text-blue-600 hover:underline text-sm',
-														disabled ? 'opacity-40 cursor-not-allowed' : ''
+														'text-primary hover:underline text-sm',
+														disabled
+															? 'opacity-40 cursor-not-allowed hover:no-underline'
+															: ''
 													].join(' ')}
 												>
 													Добавить
@@ -250,26 +260,30 @@ export function ChatModal({ isOpen, onClose }: IModalProps) {
 								})}
 							</ul>
 						) : (
-							<div className='text-sm text-slate-500'>Ничего не найдено.</div>
+							<div className='text-sm text-muted-foreground'>
+								Ничего не найдено.
+							</div>
 						)}
 					</div>
 				</div>
 			</div>
 
 			{!!error && (
-				<div className='mt-3 text-sm text-red-600'>
+				<div className='mt-3 text-sm text-destructive'>
 					{(error as any)?.message ?? 'Не удалось создать чат'}
 				</div>
 			)}
 
 			<div className='mt-6 flex justify-end gap-3'>
 				<Button
+					variant='secondary'
 					onClick={handleClose}
 					disabled={isPending}
 				>
 					Отмена
 				</Button>
 				<Button
+					variant='default'
 					type='button'
 					disabled={!canSubmit || isPending}
 					onClick={handleCreate}

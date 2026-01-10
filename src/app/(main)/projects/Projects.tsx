@@ -29,12 +29,7 @@ export function Projects() {
 		}
 	}, [isReady, isLoading, spaces, currentSpaceId, selectSpace])
 
-	const gridCols = useMemo(
-		() => `${collapsed ? '0px' : `${SIDEBAR_W}px`} 1fr`,
-		[collapsed]
-	)
-
-	const handleLeft = collapsed ? 0 : SIDEBAR_W
+	const sidebarWidth = collapsed ? 0 : SIDEBAR_W
 
 	return (
 		<div
@@ -51,7 +46,7 @@ export function Projects() {
           bg-slate-200 hover:bg-slate-300 shadow
           flex items-center justify-center
         '
-				style={{ left: handleLeft }}
+				style={{ left: sidebarWidth }}
 				title={collapsed ? 'Открыть' : 'Скрыть'}
 			>
 				{collapsed ? (
@@ -62,17 +57,21 @@ export function Projects() {
 			</button>
 
 			{/* Сетка контента */}
-			<div
-				className='grid'
-				style={{ gridTemplateColumns: gridCols, height: '100%' }}
-			>
-				<SidebarProject
-					spaces={spaces}
-					selectedSpaceId={currentSpaceId}
-					onSelectSpace={selectSpace}
-					loading={isLoading}
-				/>
-				<MainProject spaceId={currentSpaceId} />
+			<div className='flex h-full w-full'>
+				<div
+					className='relative shrink-0 border-r border-slate-200 bg-white transition-[width] duration-200'
+					style={{ width: sidebarWidth }}
+				>
+					<SidebarProject
+						spaces={spaces}
+						selectedSpaceId={currentSpaceId}
+						onSelectSpace={selectSpace}
+						loading={isLoading}
+					/>
+				</div>
+				<div className='min-w-0 flex-1'>
+					<MainProject spaceId={currentSpaceId} />
+				</div>
 			</div>
 		</div>
 	)
