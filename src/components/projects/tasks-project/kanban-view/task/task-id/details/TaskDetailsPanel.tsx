@@ -1,3 +1,7 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+
 import { CalendarComponent } from '@/components/ui/calendar/CalendarComponent'
 import { BigField } from '@/components/ui/field/big-field/BigField'
 import { ScrollArea } from '@/components/ui/scroll/scroll-area'
@@ -22,6 +26,7 @@ import { formatDate } from '@/utils/date-utils'
 import { getPriorityOptions, getStatusOptions } from '@/utils/selectOptions'
 
 import { ChecklistList } from './ChecklistList'
+import { cn } from '@/lib/utils'
 
 export function TaskDetailsPanel({
 	task,
@@ -54,6 +59,11 @@ export function TaskDetailsPanel({
 
 	const statusOptions = getStatusOptions()
 	const priorityOptions = getPriorityOptions()
+	const [description, setDescription] = useState(task.description ?? '')
+
+	useEffect(() => {
+		setDescription(task.description ?? '')
+	}, [task.id, task.description])
 
 	const handleAssigneeChange = (value: string) => {
 		updateAssignee({
@@ -98,17 +108,21 @@ export function TaskDetailsPanel({
 		})
 	}
 
-	const handleChangeDate = (listId: number, itemId: number, date: Date) => {
+	const handleChangeDate = (
+		listId: number,
+		itemId: number,
+		date: Date | null
+	) => {
 		updateChecklistItem({
 			itemId,
 			taskId: task.id,
-			body: { due_date: formatDate(date) }
+			body: { due_date: date ? formatDate(date) : null }
 		})
 	}
 
 	return (
 		<ScrollArea className='h-full pr-2'>
-			<div className='space-y-5 pb-2'>
+			<div className='space-y-5 pb-2 pl-1'>
 				<div>
 					<h3 className='font-semibold text-blue-600 mb-1'>Ответственный</h3>
 					{usersLoading ? (
@@ -128,18 +142,20 @@ export function TaskDetailsPanel({
 				<div>
 					<h3 className='font-semibold text-blue-600 mb-50'>Описание</h3>
 					<BigField
-						value={task.description || ''}
+						value={description}
 						placeholder='Введите описание задачи...'
+						onChange={e => setDescription(e.target.value)}
 						onBlur={e => {
 							const newDescription = e.target.value.trim()
-							if (newDescription !== task.description) {
+							const prev = (task.description ?? '').trim()
+							if (newDescription !== prev) {
 								updateDescription({
 									taskId: task.id,
 									description: newDescription
 								})
 							}
 						}}
-						readOnly={!canEditTask}
+						className={cn(!canEditTask && 'opacity-70 cursor-not-allowed')}
 					/>
 				</div>
 				<div className='flex gap-6'>
@@ -187,6 +203,12 @@ export function TaskDetailsPanel({
 								dueDate: formatDate(date)
 							})
 						}
+						onClear={() =>
+							updateDueDate({
+								taskId: task.id,
+								dueDate: null
+							})
+						}
 						disabled={!canEditTask}
 					/>
 				</div>
@@ -198,7 +220,7 @@ export function TaskDetailsPanel({
 							checklists={checklists}
 							onAddChecklist={handleAddChecklist}
 							onUpdateChecklist={(id, title) =>
-								updateChecklist({ checklistId: id, title })
+								updateChecklist({ checklistId: id, taskId: task.id, title })
 							}
 							onDeleteChecklist={id => deleteChecklist(id)}
 							onAddItem={handleAddItem}

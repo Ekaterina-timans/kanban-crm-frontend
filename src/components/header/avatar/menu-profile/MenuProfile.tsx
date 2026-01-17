@@ -1,6 +1,7 @@
 'use client'
 
 import { LogOut, Plus, Settings, User, UserPlus, Users } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { CreateGroupModal } from '@/components/groups/CreateGroupModal'
@@ -15,11 +16,11 @@ import {
 
 import { useAuth } from '@/providers/AuthProvider'
 
+import { DASHBOARD_PAGES } from '@/config/page.url.config'
+
 import { useGroupInvitationsModal } from '@/store/useGroupInvitationsModal'
 
 import { useLogout } from '@/hooks/auth/useLogout'
-import { useRouter } from 'next/navigation'
-import { DASHBOARD_PAGES } from '@/config/page.url.config'
 
 export function MenuProfile() {
 	const [isCreateModalOpen, setCreateModalOpen] = useState(false)
@@ -43,19 +44,19 @@ export function MenuProfile() {
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem 
+					<DropdownMenuItem
 						className='cursor-pointer'
 						onClick={() => router.push(DASHBOARD_PAGES.PROFILE)}
 					>
 						<User />
 						<span className='text-lg'>Профиль</span>
 					</DropdownMenuItem>
-					<DropdownMenuItem 
+					<DropdownMenuItem
 						className='cursor-pointer'
-						onClick={() => router.push(DASHBOARD_PAGES.SETTINGS)}
+						onClick={() => router.push(DASHBOARD_PAGES.NOTIFICATION_SETTINGS)}
 					>
 						<Settings />
-						<span className='text-lg'>Настройки</span>
+						<span className='text-lg'>Настройки уведомлений</span>
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />

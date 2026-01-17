@@ -1,17 +1,17 @@
-import { CalendarDays, UserCircle2 } from 'lucide-react'
+import { CalendarDays } from 'lucide-react'
 
 import { UserAvatar } from '@/components/ui/avatar/UserAvatar'
 import Badge from '@/components/ui/badge/Badge'
 import { Tooltip } from '@/components/ui/tooltip/Tooltip'
-
-import { ITask } from '@/types/task.types'
 
 import {
 	priorities,
 	priorityIcons,
 	statusIcons,
 	statuses
-} from '@/config/data.config'
+} from '@/constants/task-ui'
+
+import { ITask } from '@/types/task.types'
 
 import { formatDateForCard } from '@/utils/date-utils'
 import { getBadgeColorPriority, getBadgeColorStatus } from '@/utils/getColor'

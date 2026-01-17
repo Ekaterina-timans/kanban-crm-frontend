@@ -14,7 +14,7 @@ export function useUpdateColumn(key?: string) {
 			columnService.updateColumn(id, data),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: ['spacesId']
+				queryKey: ['spaceKanban']
 			})
 			toast.success('Колонка успешно изменена!')
 		},

@@ -12,13 +12,20 @@ export function useUpdateSpace(key?: string) {
 		mutationKey: ['update space', key],
 		mutationFn: ({ id, data }: { id: string; data: TypeSpaceFormState }) =>
 			spaceService.updateSpace(id, data),
-		onSuccess() {
+		onSuccess: (_data, variables) => {
+			// список пространств
+			queryClient.invalidateQueries({ queryKey: ['spaces'] })
+
+			// meta пространства (имя/описание/фон)
 			queryClient.invalidateQueries({
-				queryKey: ['spacesId']
-			}),
-				queryClient.invalidateQueries({
-					queryKey: ['spaces']
-				})
+				queryKey: ['spaceMeta', String(variables.id)]
+			})
+
+			// kanban (колонки/задачи)
+			queryClient.invalidateQueries({
+				queryKey: ['spaceKanban', String(variables.id)]
+			})
+
 			toast.success('Пространство успешно изменено!')
 		},
 		onError(error: any) {

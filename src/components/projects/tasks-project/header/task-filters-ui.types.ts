@@ -29,7 +29,9 @@ export interface IHeading {
 	isFiltersOpen: boolean
 	onToggleFilters: () => void
 	filters: ITaskFiltersUI
+	appliedFilters: ITaskFiltersUI
 	onChangeFilters: (patch: Partial<ITaskFiltersUI>) => void
+	onApplyFilters: () => void
 	onResetFilters: () => void
 
 	assigneeOptions?: Option[]

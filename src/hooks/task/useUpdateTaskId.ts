@@ -1,6 +1,7 @@
-import { taskService } from "@/services/task.service"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
+
+import { taskService } from '@/services/task.service'
 
 export function useUpdateTaskId() {
 	const queryClient = useQueryClient()
@@ -11,7 +12,7 @@ export function useUpdateTaskId() {
 			taskService.updateTaskColumn(taskId, columnId),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: ['spacesId']
+				queryKey: ['spaceKanban']
 			})
 			toast.success('Задача успешно изменена!')
 		},

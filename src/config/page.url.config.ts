@@ -5,7 +5,7 @@ class DASHBOARD {
 	CHATS = '/chats'
 	ADMIN_PANEL = '/admin-panel'
 	PROFILE = '/profile'
-	SETTINGS = '/settings'
+	NOTIFICATION_SETTINGS = '/notification-settings'
 }
 
 export const DASHBOARD_PAGES = new DASHBOARD()

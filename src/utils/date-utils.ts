@@ -1,9 +1,10 @@
 import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import timezone from 'dayjs/plugin/timezone'
 import isTodayPlugin from 'dayjs/plugin/isToday'
 import isYesterdayPlugin from 'dayjs/plugin/isYesterday'
-import { useTimezoneStore } from "@/store/useTimezoneStore"
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
+
+import { useTimezoneStore } from '@/store/useTimezoneStore'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -22,7 +23,7 @@ export function formatTime(iso?: string | null): string {
 export function formatDate(date: Date | undefined): string | null {
 	if (!date) return null
 	const tz = useTimezoneStore.getState().timezone
-	return dayjs(date).tz(tz).format('YYYY.MM.DD HH:mm:ss')
+	return dayjs(date).tz(tz).format('YYYY-MM-DD HH:mm:ss')
 }
 
 /** Формат: 23.01.2025 */
@@ -34,16 +35,16 @@ export function formatDateForCard(dateString?: string | null): string {
 }
 
 export function dateSeparatorLabel(iso?: string | null): string {
-  if (!iso) return ''
-  const tz = useTimezoneStore.getState().timezone
-  const d = dayjs.utc(iso).tz(tz)
-  if (!d.isValid()) return ''
-  if (d.isToday()) return 'Сегодня'
-  if (d.isYesterday()) return 'Вчера'
-  return d.format('DD.MM.YYYY')
+	if (!iso) return ''
+	const tz = useTimezoneStore.getState().timezone
+	const d = dayjs.utc(iso).tz(tz)
+	if (!d.isValid()) return ''
+	if (d.isToday()) return 'Сегодня'
+	if (d.isYesterday()) return 'Вчера'
+	return d.format('DD.MM.YYYY')
 }
 
-/** 
+/**
  * Для истории действий:
  * Сегодня, 12:30
  * Вчера, 18:10

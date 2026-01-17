@@ -17,7 +17,7 @@ interface ChecklistListProps {
 	onDeleteItem: (listId: number, itemId: number) => void
 	onToggleItem: (listId: number, itemId: number, completed: boolean) => void
 	onUpdateItemName: (listId: number, itemId: number, name: string) => void
-	onChangeDate: (listId: number, itemId: number, date: Date) => void
+	onChangeDate: (listId: number, itemId: number, date: Date | null) => void
 	onChangeAssignee: (listId: number, itemId: number, userId: string) => void
 	onUpdateChecklist: (checklistId: number, title: string) => void
 	onDeleteChecklist: (checklistId: number) => void
@@ -162,9 +162,11 @@ export const ChecklistList = ({
 												<CalendarComponent
 													value={item.due_date ? new Date(item.due_date) : null}
 													placeholder='Дата'
+													clearable
 													onDateChange={date =>
 														onChangeDate(list.id, item.id, date)
 													}
+													onClear={() => onChangeDate(list.id, item.id, null)}
 													disabled={!canEditTask}
 												/>
 											</div>

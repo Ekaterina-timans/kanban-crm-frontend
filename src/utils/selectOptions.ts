@@ -1,11 +1,11 @@
-import { PriorityId, StatusId } from '@/types/task.types'
-
 import {
 	priorities,
 	priorityIcons,
 	statusIcons,
 	statuses
-} from '@/config/data.config'
+} from '@/constants/task-ui'
+
+import { PriorityId, StatusId } from '@/types/task.types'
 
 export const getStatusOptions = () =>
 	Object.entries(statuses).map(([id, name]) => ({

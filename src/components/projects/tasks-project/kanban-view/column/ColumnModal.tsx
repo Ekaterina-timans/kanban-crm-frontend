@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button/Button'
 import Field from '@/components/ui/field/Field'
 import { ModalWrapper } from '@/components/ui/modal/ModalWrapper'
 
-import { Colors } from '@/types/column.types'
+import { COLUMN_COLORS, DEFAULT_COLUMN_COLOR } from '@/constants/colors'
+
 import { IColumnForm, IModalProps } from '@/types/modal.types'
 
 import { useCreateColumn } from '@/hooks/column/useCreateColumn'
@@ -45,7 +46,9 @@ export function ColumnModal({
 
 	const { createColumn } = useCreateColumn()
 	const { updateColumn } = useUpdateColumn(columnData?.id)
-	const [hex, setHex] = useState<string>(columnData?.color || '#EE82EE')
+	const [hex, setHex] = useState<string>(
+		columnData?.color || DEFAULT_COLUMN_COLOR
+	)
 
 	useEffect(() => {
 		if (!isOpen) return
@@ -55,7 +58,7 @@ export function ColumnModal({
 			setHex(columnData.color)
 		} else if (mode === 'create') {
 			reset({ name: '' })
-			setHex('#EE82EE')
+			setHex(DEFAULT_COLUMN_COLOR)
 		}
 	}, [isOpen, mode, columnData, reset])
 
@@ -108,7 +111,7 @@ export function ColumnModal({
 				<div className='mb-4'>
 					<p>Выберите цвет фона</p>
 					<Circle
-						colors={Colors}
+						colors={COLUMN_COLORS}
 						color={hex}
 						pointProps={{
 							style: {

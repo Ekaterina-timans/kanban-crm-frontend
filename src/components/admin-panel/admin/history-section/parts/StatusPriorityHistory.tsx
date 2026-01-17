@@ -1,6 +1,7 @@
+import { priorities, statuses } from '@/constants/task-ui'
 import { PriorityId, StatusId } from '@/types/task.types'
 
-import { priorities, statuses } from '@/config/data.config'
+
 
 import { formatActivityDateTime } from '@/utils/date-utils'
 
@@ -17,7 +18,7 @@ export function StatusPriorityHistory({
 }: StatusPriorityHistoryProps) {
 	const c = item.changes
 
-	// 🔥 ОБНОВЛЕНИЕ СТАТУСА
+	// ОБНОВЛЕНИЕ СТАТУСА
 	if (item.action === 'status_updated') {
 		const oldStatus = statuses[c.old as StatusId] ?? c.old
 		const newStatus = statuses[c.new as StatusId] ?? c.new
@@ -44,7 +45,7 @@ export function StatusPriorityHistory({
 		)
 	}
 
-	// 🔥 ОБНОВЛЕНИЕ ПРИОРИТЕТА
+	// ОБНОВЛЕНИЕ ПРИОРИТЕТА
 	if (item.action === 'priority_updated') {
 		const oldPriority = priorities[c.old as PriorityId] ?? c.old
 		const newPriority = priorities[c.new as PriorityId] ?? c.new

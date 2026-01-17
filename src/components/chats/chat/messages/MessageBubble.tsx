@@ -19,8 +19,8 @@ import { useDeleteMessage } from '@/hooks/message/useDeleteMessage'
 
 import { formatTime } from '@/utils/date-utils'
 
-import { colorForId } from './colorName'
 import { cn } from '@/lib/utils'
+import { colorForId } from '@/constants/colors'
 
 type BubbleProps = {
 	message: IMessage

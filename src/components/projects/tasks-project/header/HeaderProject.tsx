@@ -1,5 +1,6 @@
 'use client'
 
+import { format } from 'date-fns'
 import {
 	CircleHelp,
 	Search,
@@ -9,9 +10,13 @@ import {
 } from 'lucide-react'
 import { useMemo } from 'react'
 
+import { Button } from '@/components/ui/button/Button'
+import { CalendarComponent } from '@/components/ui/calendar/CalendarComponent'
 import Field from '@/components/ui/field/Field'
 import { SelectComponent } from '@/components/ui/select/SelectComponent'
 import { Tooltip } from '@/components/ui/tooltip/Tooltip'
+
+import { formatDateForCard } from '@/utils/date-utils'
 
 import { IHeading, countActiveFilters } from './task-filters-ui.types'
 
@@ -24,7 +29,9 @@ export function HeaderProject({
 	isFiltersOpen,
 	onToggleFilters,
 	filters,
+	appliedFilters,
 	onChangeFilters,
+	onApplyFilters,
 	onResetFilters,
 
 	assigneeOptions = [],
@@ -32,7 +39,10 @@ export function HeaderProject({
 	priorityOptions = []
 }: IHeading) {
 	const ANY = '__any__'
-	const activeCount = useMemo(() => countActiveFilters(filters), [filters])
+	const activeCount = useMemo(
+		() => countActiveFilters(appliedFilters),
+		[appliedFilters]
+	)
 
 	const sortOptions = [
 		{ value: 'created_at', label: 'По дате создания' },
@@ -115,7 +125,7 @@ export function HeaderProject({
 
 			{/* Фильтры: аккуратная карточка под шапкой */}
 			{isFiltersOpen && (
-				<div className='mx-5 mt-3 px-5 py-4 rounded-2xl bg-card border border-border shadow-sm'>
+				<div className='mx-5 mt-3 mb-1 px-5 py-4 rounded-2xl bg-card border border-border shadow-sm'>
 					<div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
 						<Field
 							placeholder='Поиск...'
@@ -127,25 +137,29 @@ export function HeaderProject({
 
 						<div>
 							<label className='block text-sm text-muted-foreground mb-1'>
-								Срок (от)
+								Срок
 							</label>
-							<input
-								type='date'
-								value={filters.due_from}
-								onChange={e => onChangeFilters({ due_from: e.target.value })}
-								className='w-full h-[47px] rounded-lg border border-border bg-background text-foreground px-3 outline-none focus-visible:ring-2 focus-visible:ring-ring'
-							/>
-						</div>
 
-						<div>
-							<label className='block text-sm text-muted-foreground mb-1'>
-								Срок (до)
-							</label>
-							<input
-								type='date'
-								value={filters.due_to}
-								onChange={e => onChangeFilters({ due_to: e.target.value })}
-								className='w-full h-[47px] rounded-lg border border-border bg-background text-foreground px-3 outline-none focus-visible:ring-2 focus-visible:ring-ring'
+							<CalendarComponent
+								mode='range'
+								placeholder='Выберите период'
+								valueRange={{
+									from: filters.due_from
+										? new Date(`${filters.due_from}T00:00:00`)
+										: null,
+									to: filters.due_to
+										? new Date(`${filters.due_to}T00:00:00`)
+										: null
+								}}
+								onRangeChange={range => {
+									onChangeFilters({
+										due_from: range?.from
+											? format(range.from, 'yyyy-MM-dd')
+											: '',
+										due_to: range?.to ? format(range.to, 'yyyy-MM-dd') : ''
+									})
+								}}
+								clearable
 							/>
 						</div>
 
@@ -209,14 +223,20 @@ export function HeaderProject({
 							/>
 						</div>
 
-						<div className='flex items-end'>
-							<button
+						<div className='flex items-end gap-3'>
+							<Button
 								type='button'
+								variant='secondary'
 								onClick={onResetFilters}
-								className='h-[47px] px-4 rounded-lg border border-border bg-background text-foreground hover:bg-muted transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 							>
 								Сбросить
-							</button>
+							</Button>
+							<Button
+								variant='default'
+								onClick={onApplyFilters}
+							>
+								Применить
+							</Button>
 						</div>
 					</div>
 				</div>

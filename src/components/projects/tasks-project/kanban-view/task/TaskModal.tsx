@@ -131,6 +131,8 @@ export function TaskModal({
 					setValue={setValue}
 					fieldName='due_date'
 					className='mb-4'
+					clearable
+					onClear={() => setValue('due_date', null)}
 				/>
 				<div className='mt-6 flex items-center justify-end gap-3'>
 					<Button

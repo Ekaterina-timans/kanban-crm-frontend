@@ -13,7 +13,7 @@ export function useCreateTask() {
 		mutationFn: (data: TypeTaskFormState) => taskService.createTask(data),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: ['spacesId']
+				queryKey: ['spaceKanban']
 			})
 			toast.success('Задача успешно создана!')
 		},

@@ -10,7 +10,7 @@ export function useDeleteTask() {
 		mutationKey: ['delete task'],
 		mutationFn: (taskId: string | number) => taskService.deleteTask(taskId),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['spacesId'] })
+			queryClient.invalidateQueries({ queryKey: ['spaceKanban'] })
 			toast.success('Задача удалена!')
 		},
 		onError: (error: any) => {

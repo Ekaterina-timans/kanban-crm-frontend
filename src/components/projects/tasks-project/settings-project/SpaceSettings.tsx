@@ -8,7 +8,11 @@ import { Button } from '@/components/ui/button/Button'
 import Field from '@/components/ui/field/Field'
 import { BigField } from '@/components/ui/field/big-field/BigField'
 
-import { Colors } from '@/types/column.types'
+import {
+	DEFAULT_SPACE_COLOR,
+	SPACE_BACKGROUND_COLORS
+} from '@/constants/colors'
+
 import { ISpaceForm } from '@/types/modal.types'
 import { ISpaceResponse, TypeSpaceFormState } from '@/types/space.types'
 
@@ -28,12 +32,12 @@ export function SpaceSettings({ items }: { items: ISpaceResponse }) {
 			name: items.name,
 			description: items.description,
 			backgroundImage: null,
-			backgroundColor: items.backgroundColor || '#DDEBFF'
+			backgroundColor: items.backgroundColor || DEFAULT_SPACE_COLOR
 		}
 	})
 
 	const [backgroundColor, setBackgroundColor] = useState<string>(
-		items.backgroundColor || '#DDEBFF'
+		items.backgroundColor || DEFAULT_SPACE_COLOR
 	)
 	const [useColor, setUseColor] = useState<boolean>(
 		!!items.backgroundImage ? false : true
@@ -125,7 +129,7 @@ export function SpaceSettings({ items }: { items: ISpaceResponse }) {
 				{useColor ? (
 					<div className='mb-4'>
 						<Circle
-							colors={Colors}
+							colors={SPACE_BACKGROUND_COLORS}
 							color={backgroundColor || undefined}
 							pointProps={{ style: { width: 30, height: 30 } }}
 							onChange={color => setBackgroundColor(color.hex)}

@@ -11,7 +11,7 @@ export function useDeleteColumn() {
 		mutationFn: (id: string) => columnService.deleteColumn(id),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: ['spacesId']
+				queryKey: ['spaceKanban']
 			})
 			toast.success('Колонка успешно удалена!')
 		},

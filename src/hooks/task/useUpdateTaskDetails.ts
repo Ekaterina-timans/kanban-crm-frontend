@@ -37,7 +37,7 @@ export function useUpdateTask() {
 
 	const invalidate = (taskId: string) => {
 		queryClient.invalidateQueries({ queryKey: ['task', String(taskId)] })
-		queryClient.invalidateQueries({ queryKey: ['spacesId'] })
+		queryClient.invalidateQueries({ queryKey: ['spaceKanban'] })
 	}
 
 	/** Обновить наименование */
@@ -83,7 +83,7 @@ export function useUpdateTask() {
 		{
 			mutationFn: ({ taskId, assigneeId }: UpdateAssigneeArgs) =>
 				taskService.updateAssignee(taskId, assigneeId),
-			onSuccess: (_data, variables) => invalidate(variables.taskId),
+			onSuccess: (_data, variables) => invalidate(variables.taskId)
 		}
 	)
 
