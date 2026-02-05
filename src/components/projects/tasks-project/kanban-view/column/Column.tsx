@@ -3,6 +3,7 @@
 import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { Plus } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { Tooltip } from '@/components/ui/tooltip/Tooltip'
@@ -32,10 +33,9 @@ export function Column({
 	renderTask: (task: ITask) => React.ReactNode
 }) {
 	const [isCreateModalOpen, setCreateModalOpen] = useState(false)
-	const [isViewModalOpen, setViewModalOpen] = useState(false)
-	const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
 	const { deleteColumn } = useDeleteColumn()
 	const { deleteTask } = useDeleteTask()
+	const router = useRouter()
 
 	const { setNodeRef } = useDroppable({
 		id: column.id,
@@ -56,8 +56,7 @@ export function Column({
 	}
 
 	const handleOpenTask = (taskId: string) => {
-		setSelectedTaskId(taskId)
-		setViewModalOpen(true)
+		router.push(`/projects?spaceId=${column.space_id}&taskId=${taskId}`)
 	}
 
 	const handleDeleteTask = (taskId: string) => {
@@ -119,17 +118,6 @@ export function Column({
 				onClose={() => setCreateModalOpen(false)}
 				columnId={column.id}
 			/>
-			{selectedTaskId && (
-				<TaskModalView
-					taskId={selectedTaskId}
-					spaceId={column.space_id}
-					isOpen={isViewModalOpen}
-					onClose={() => {
-						setViewModalOpen(false)
-						setSelectedTaskId(null)
-					}}
-				/>
-			)}
 		</div>
 	)
 }

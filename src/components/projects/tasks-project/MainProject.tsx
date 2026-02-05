@@ -1,11 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { ScrollArea } from '@/components/ui/scroll/scroll-area'
 import { MainProjectSkeleton } from '@/components/ui/skeleton/MainProjectSkeleton'
 
-import { useAuth } from '@/providers/AuthProvider'
+import { DEFAULT_SPACE_COLOR } from '@/constants/colors'
 
 import { ITaskFilters } from '@/types/space.types'
 
@@ -14,7 +14,6 @@ import { useSpaceAccessStore } from '@/store/useSpaceAccessStore'
 
 import { useFetchSpaceRole } from '@/hooks/space-user/useFetchSpaceRole'
 import { useGetSpaceUsers } from '@/hooks/space-user/useGetSpaceUsers'
-import { useSpaceId } from '@/hooks/space/useSpaceId'
 import { useSpaceKanban } from '@/hooks/space/useSpaceKanban'
 import { useSpaceMeta } from '@/hooks/space/useSpaceMeta'
 
@@ -30,7 +29,7 @@ import {
 } from './header/task-filters-ui.types'
 import { KanbanView } from './kanban-view/KanbanView'
 import { PanelSettingsContainer } from './settings-project/PanelSettingsContainer'
-import { DEFAULT_SPACE_COLOR } from '@/constants/colors'
+import { TaskModalHost } from './TaskModalHost'
 
 export function MainProject({ spaceId }: { spaceId: string | null }) {
 	const { data: spaceUsers = [] } = useGetSpaceUsers(spaceId ?? '')
@@ -168,6 +167,7 @@ export function MainProject({ spaceId }: { spaceId: string | null }) {
 
 				{canOpenSettings && <PanelSettingsContainer />}
 			</div>
+			<TaskModalHost />
 		</div>
 	)
 }

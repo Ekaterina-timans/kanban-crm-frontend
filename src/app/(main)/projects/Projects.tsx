@@ -1,7 +1,8 @@
 'use client'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useEffect, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 
 import { SidebarProject } from '@/components/projects/sidebar/SidebarProject'
 import { MainProject } from '@/components/projects/tasks-project/MainProject'
@@ -17,17 +18,32 @@ export function Projects() {
 	const { items: spaces, isLoading } = useSpaces()
 	const { currentSpaceId, selectSpace, isReady } = useCurrentSpace()
 	const { collapsed, toggle } = useProjectSidebar()
+	const searchParams = useSearchParams()
 
 	useEffect(() => {
 		if (!isReady || isLoading || !spaces?.length) return
 
-		const exists = spaces.some(s => String(s.id) === String(currentSpaceId))
+		const byId = (id: string | null) =>
+			id ? spaces.find(s => String(s.id) === String(id)) : null
 
-		// Если сохранённого нет или оно больше не существует — выбираем первое
-		if (!currentSpaceId || !exists) {
-			selectSpace(String(spaces[0].id))
+		const sidFromUrl = searchParams.get('spaceId')
+		const spaceFromUrl = byId(sidFromUrl)
+
+		// 1) Приоритет: spaceId из URL
+		if (spaceFromUrl) {
+			if (String(currentSpaceId) !== String(spaceFromUrl.id)) {
+				selectSpace(String(spaceFromUrl.id))
+			}
+			return
 		}
-	}, [isReady, isLoading, spaces, currentSpaceId, selectSpace])
+
+		// 2) Если URL пустой/невалидный — используем сохранённый currentSpaceId
+		const spaceFromStore = byId(currentSpaceId)
+		if (spaceFromStore) return
+
+		// 3) Иначе — первый space
+		selectSpace(String(spaces[0].id))
+	}, [isReady, isLoading, spaces, currentSpaceId, selectSpace, searchParams])
 
 	const sidebarWidth = collapsed ? 0 : SIDEBAR_W
 
