@@ -29,10 +29,10 @@ import { useSelectedChat } from '@/store/useSelectedChat'
 import { useClearHistory } from '@/hooks/chat/useClearHistory'
 import { useDeleteChat } from '@/hooks/chat/useDeleteChat'
 import { useLeaveChat } from '@/hooks/chat/useLeaveChat'
+import { useMyChatRole } from '@/hooks/chat/useMyChatRole'
 
 import { ChatInfoPanel } from './ChatInfoPanel'
 import { ChatSearchInline } from './ChatSearchInline'
-import { useMyChatRole } from '@/hooks/chat/useMyChatRole'
 
 export function HeaderChat({
 	title,
@@ -155,15 +155,18 @@ export function HeaderChat({
 								</button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align='end'>
-								<DropdownMenuItem
-									onClick={() => {
-										setInfoTab('participants')
-										setInfoOpen(true)
-										setIsDropdownOpen(false)
-									}}
-								>
-									<Users /> Участники
-								</DropdownMenuItem>
+								{chatType === 'group' && (
+									<DropdownMenuItem
+										onClick={() => {
+											setInfoTab('participants')
+											setInfoOpen(true)
+											setIsDropdownOpen(false)
+										}}
+									>
+										<Users /> Участники
+									</DropdownMenuItem>
+								)}
+
 								<DropdownMenuItem
 									onClick={() => {
 										setInfoOpen(true)

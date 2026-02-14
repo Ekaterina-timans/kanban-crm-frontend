@@ -50,9 +50,9 @@ export function RightsSettings({ spaceId }: { spaceId: string }) {
 		updateUserRole({ spaceUserId: String(spaceUserId), role: role as TRole })
 	}
 
-	if (isLoading) return <p className='text-center text-gray-500'>Загрузка...</p>
+	if (isLoading)
+		return <p className='text-center text-muted-foreground'>Загрузка...</p>
 
-	// Пользователи группы, которых ещё нет в пространстве
 	const availableUsers = groupMembers
 		.filter(
 			(member: any) =>
@@ -66,13 +66,13 @@ export function RightsSettings({ spaceId }: { spaceId: string }) {
 
 	return (
 		<div className='space-y-4'>
-			<h3 className='text-center font-semibold text-blue-600'>
+			<h3 className='text-center'>
 				Пользователи пространства
 			</h3>
 
 			{/* Блок добавления пользователя */}
-			<div className='border border-gray-200 rounded-lg bg-white p-3 shadow-sm space-y-2'>
-				<div className='flex justify-between gap-1'>
+			<div className='border border-border rounded-lg bg-card p-3 shadow-sm space-y-2'>
+				<div className='flex justify-between gap-2'>
 					<SelectComponent
 						options={availableUsers}
 						placeholder='Выберите пользователя'
@@ -91,10 +91,10 @@ export function RightsSettings({ spaceId }: { spaceId: string }) {
 				<div className='flex justify-end'>
 					<Button
 						size='sm'
-						className='flex items-center gap-1 text-blue-600 border-blue-400'
 						variant='outline'
 						onClick={handleAddUser}
 						disabled={!newUserId}
+						className='flex items-center gap-1 border-border text-foreground hover:bg-accent hover:text-accent-foreground'
 					>
 						<UserPlus2 className='w-4 h-4' />
 						Добавить
@@ -103,31 +103,30 @@ export function RightsSettings({ spaceId }: { spaceId: string }) {
 			</div>
 
 			{/* Таблица пользователей */}
-			<div className='border rounded-lg bg-white overflow-hidden divide-y divide-gray-100'>
+			<div className='border border-border rounded-lg bg-card overflow-hidden divide-y divide-border'>
 				{spaceUsers.length === 0 && (
-					<p className='text-center text-gray-400 py-3 italic'>
+					<p className='text-center text-muted-foreground py-3 italic'>
 						Пользователей пока нет
 					</p>
 				)}
 
 				{spaceUsers.map((su: any) => {
-					const u = su.user // вложенный объект пользователя
+					const u = su.user
 
 					return (
 						<div
 							key={su.id}
-							className='flex items-center justify-between px-2 py-3 hover:bg-blue-50 transition-colors'
+							className='flex items-center justify-between px-2 py-3 hover:bg-accent transition-colors'
 						>
 							{/* Левая часть */}
-							<div className='flex items-center gap-1'>
+							<div className='flex items-center gap-2 min-w-0'>
 								<UserAvatar
 									src={u?.avatar}
 									name={u?.name ?? null}
 									email={u?.email}
 									size={35}
-									className=''
 								/>
-								<p className='font-medium text-gray-800'>
+								<p className='font-medium text-foreground truncate'>
 									{u?.name || u?.email || 'Без имени'}
 								</p>
 							</div>
@@ -145,7 +144,7 @@ export function RightsSettings({ spaceId }: { spaceId: string }) {
 								<Button
 									variant='ghost'
 									size='icon'
-									className='text-blue-600 hover:text-blue-700'
+									className='text-muted-foreground hover:text-foreground'
 									onClick={() => {
 										setSelectedUser(su)
 										setRightsModalOpen(true)
@@ -157,7 +156,7 @@ export function RightsSettings({ spaceId }: { spaceId: string }) {
 								<Button
 									variant='ghost'
 									size='icon'
-									className='text-red-500 hover:text-red-600'
+									className='text-destructive hover:opacity-90'
 									onClick={() => removeSpaceUser(String(su.id))}
 								>
 									<Trash2 className='w-5 h-5' />

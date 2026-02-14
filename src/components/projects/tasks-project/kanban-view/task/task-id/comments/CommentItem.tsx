@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { FileChip } from '@/components/chats/chat/footer/AttachmentPreview'
+import { UserAvatar } from '@/components/ui/avatar/UserAvatar'
 import { ChatOrCommentContextMenu } from '@/components/ui/context-menu/ChatOrCommentContextMenu'
 import {
 	DropdownMenu,
@@ -10,7 +11,6 @@ import { Tooltip } from '@/components/ui/tooltip/Tooltip'
 
 import { renderMentions } from './renderMentions'
 import { cn } from '@/lib/utils'
-import { UserAvatar } from '@/components/ui/avatar/UserAvatar'
 
 const API_URL = process.env.NEXT_PUBLIC_API_BASE
 
@@ -26,7 +26,6 @@ export function CommentItem({
 }: any) {
 	const isMine = c.user?.email === user?.email
 	const userName = c.user?.name || c.user?.email || 'Пользователь'
-	const userInitial = userName[0]?.toUpperCase() || '?'
 
 	const reply = useMemo(
 		() =>
@@ -39,6 +38,7 @@ export function CommentItem({
 				| null,
 		[c]
 	)
+
 	const replyAuthor =
 		reply?.user?.name ??
 		reply?.user?.email ??
@@ -65,10 +65,10 @@ export function CommentItem({
 						setOpenId(c.id)
 					}}
 					className={cn(
-						'p-3 rounded-lg border bg-white transition cursor-context-menu',
+						'p-3 rounded-lg border transition cursor-context-menu bg-card',
 						isMine
-							? 'border-blue-200 shadow-sm'
-							: 'border-gray-200 hover:bg-slate-50'
+							? 'border-primary/25 shadow-sm'
+							: 'border-border hover:bg-accent'
 					)}
 				>
 					<div className='flex justify-between items-center mb-2'>
@@ -79,34 +79,37 @@ export function CommentItem({
 									name={c.user?.name ?? null}
 									email={c.user?.email}
 									size={32}
-									className='border border-gray-200'
+									className='border border-border'
 								/>
 							</Tooltip>
 
 							<p
-								className={`font-medium text-sm ${isMine ? 'text-blue-600' : 'text-gray-800'}`}
+								className={cn(
+									'font-medium text-sm',
+									isMine ? 'text-primary' : 'text-foreground'
+								)}
 							>
 								{userName}
 							</p>
 						</div>
 
-						<p className='text-xs text-gray-400'>{formattedDate}</p>
+						<p className='text-xs text-muted-foreground'>{formattedDate}</p>
 					</div>
 
-					{/* ДОБАВЛЕННЫЙ БЛОК ПРЕВЬЮ ОТВЕТА */}
+					{/* Превью ответа */}
 					{reply && (
-						<div className='ml-10 mb-2 rounded-md bg-slate-100 p-2 text-xs'>
-							<div className='font-medium truncate'>
+						<div className='ml-10 mb-2 rounded-md bg-muted border border-border p-2 text-xs'>
+							<div className='font-medium truncate text-foreground'>
 								{replyAuthor || 'Комментарий'}
 							</div>
-							<div className='line-clamp-2 opacity-80'>
+							<div className='line-clamp-2 text-muted-foreground'>
 								{reply.content ?? 'Вложение'}
 							</div>
 						</div>
 					)}
 
 					{c.content && (
-						<div className='text-sm text-gray-700 whitespace-pre-line leading-snug ml-10 mb-2'>
+						<div className='text-sm text-foreground/90 whitespace-pre-line leading-snug ml-10 mb-2'>
 							{renderMentions(c.content, c.mentioned_users ?? [])}
 						</div>
 					)}
@@ -124,7 +127,7 @@ export function CommentItem({
 										href={fileUrl}
 										target='_blank'
 										rel='noreferrer'
-										className='block overflow-hidden rounded-lg border bg-white'
+										className='block overflow-hidden rounded-lg border border-border bg-card'
 										title={att.original_name}
 									>
 										<img

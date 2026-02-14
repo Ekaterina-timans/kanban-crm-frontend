@@ -2,8 +2,10 @@
 
 import { X } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import Badge from '@/components/ui/badge/Badge'
+import { ScrollArea } from '@/components/ui/scroll/scroll-area'
 
 import { INotification } from '@/types/notification.types'
 
@@ -16,93 +18,84 @@ interface NotificationProps {
 	onClose: () => void
 }
 
-export function NotificationsDropdown({ notifications, onClose }: NotificationProps) {
+export function NotificationsDropdown({
+	notifications,
+	onClose
+}: NotificationProps) {
 	const markRead = useMarkNotificationsRead()
+	const router = useRouter()
 
 	const handleClearAll = () => {
 		markRead.mutate()
 		onClose()
 	}
 
+	const itemClass =
+		'block rounded p-2 mb-1 transition hover:bg-accent hover:text-accent-foreground'
+
 	return (
-		<div className='absolute right-0 mt-2 w-96 bg-white shadow-lg rounded-lg z-50 p-4 border'>
+		<div className='absolute right-0 mt-2 w-96 rounded-lg border border-border bg-card text-card-foreground shadow-lg z-50 p-4'>
 			<div className='flex justify-between items-center mb-2'>
 				<span className='font-bold text-lg'>Уведомления</span>
-				<button onClick={onClose} aria-label='Закрыть'>
-					<X />
+
+				<button
+					onClick={onClose}
+					aria-label='Закрыть'
+					className='rounded-md p-1 hover:bg-accent hover:text-accent-foreground transition'
+				>
+					<X className='h-5 w-5' />
 				</button>
 			</div>
 
-			<div className='max-h-80 overflow-y-auto'>
-				{notifications.length === 0 && (
-					<div className='text-gray-500 text-sm py-4 text-center'>
-						Нет новых уведомлений
-					</div>
-				)}
-
-				{notifications.map(n => {
-					const config =
-						notificationsConfig[n.type] || notificationsConfig.default
-
-					const title = config.renderTitle(n)
-					const description = config.renderDescription?.(n)
-					const action = config.action
-
-					const DateLine = (
-						<div className='text-xs text-gray-400 mt-1'>
-							{new Date(n.created_at).toLocaleString('ru-RU')}
+			<ScrollArea className='h-80'>
+				<div className='pr-2'>
+					{notifications.length === 0 && (
+						<div className='text-sm py-4 text-center text-muted-foreground'>
+							Нет новых уведомлений
 						</div>
-					)
+					)}
 
-					const Content = (
-						<div className='flex items-start space-x-2'>
-							<span className='inline-block bg-gray-200 p-2 rounded-full'>
-								<Badge text='!' color='primary' />
-							</span>
+					{notifications.map(n => {
+						const config =
+							notificationsConfig[n.type] || notificationsConfig.default
+						const title = config.renderTitle(n)
+						const description = config.renderDescription?.(n)
+						const action = config.action
 
-							<div className='flex-1'>
-								<div className='font-semibold'>{title}</div>
-								{description && (
-									<div className='text-xs text-gray-500'>{description}</div>
-								)}
-								{DateLine}
+						const DateLine = (
+							<div className='text-xs text-muted-foreground mt-1'>
+								{new Date(n.created_at).toLocaleString('ru-RU')}
 							</div>
-						</div>
-					)
-
-					// 1) action как строка => просто Link
-					if (typeof action === 'string' && action.length > 0) {
-						return (
-							<Link
-								key={n.id}
-								href={action}
-								className='block hover:bg-gray-100 rounded p-2 mb-1 transition'
-								onClick={onClose}
-							>
-								{Content}
-							</Link>
 						)
-					}
 
-					// 2) action как функция:
-					// может открыть модалку (side-effect) ИЛИ вернуть ссылку (href)
-					if (typeof action === 'function') {
-						let maybeHref: unknown = null
+						const Content = (
+							<div className='flex items-start gap-2'>
+								<span className='inline-flex items-center justify-center rounded-full bg-muted p-2'>
+									<Badge
+										text='!'
+										color='primary'
+									/>
+								</span>
 
-						try {
-							// пробуем получить href
-							maybeHref = action(n, () => {})
-						} catch {
-							maybeHref = null
-						}
+								<div className='flex-1'>
+									<div className='font-semibold'>{title}</div>
+									{description && (
+										<div className='text-xs text-muted-foreground'>
+											{description}
+										</div>
+									)}
+									{DateLine}
+								</div>
+							</div>
+						)
 
-						// если функция вернула ссылку — делаем Link
-						if (typeof maybeHref === 'string' && maybeHref.length > 0) {
+						// 1) action строка => Link
+						if (typeof action === 'string' && action.length > 0) {
 							return (
 								<Link
 									key={n.id}
-									href={maybeHref}
-									className='block hover:bg-gray-100 rounded p-2 mb-1 transition'
+									href={action}
+									className={itemClass}
 									onClick={onClose}
 								>
 									{Content}
@@ -110,32 +103,54 @@ export function NotificationsDropdown({ notifications, onClose }: NotificationPr
 							)
 						}
 
-						// иначе это “кнопка” (модалка/side-effect)
+						// 2) action функция => ТОЛЬКО onClick (без вызовов в рендере)
+						if (typeof action === 'function') {
+							return (
+								<div
+									key={n.id}
+									className={`${itemClass} cursor-pointer`}
+									role='button'
+									tabIndex={0}
+									onClick={() => {
+										const res = action(n, onClose)
+
+										// если функция вернула строку — считаем это href и навигируем вручную
+										if (typeof res === 'string' && res.length > 0) {
+											router.push(res)
+											onClose()
+										}
+									}}
+									onKeyDown={e => {
+										if (e.key === 'Enter' || e.key === ' ') {
+											e.preventDefault()
+											const res = action(n, onClose)
+											if (typeof res === 'string' && res.length > 0) {
+												router.push(res)
+												onClose()
+											}
+										}
+									}}
+								>
+									{Content}
+								</div>
+							)
+						}
+
+						// 3) дефолт
 						return (
 							<div
 								key={n.id}
-								className='block hover:bg-gray-100 rounded p-2 mb-1 transition cursor-pointer'
-								onClick={() => action(n, onClose)}
+								className={itemClass}
 							>
 								{Content}
 							</div>
 						)
-					}
-
-					// 3) дефолт — просто карточка
-					return (
-						<div
-							key={n.id}
-							className='block hover:bg-gray-100 rounded p-2 mb-1 transition'
-						>
-							{Content}
-						</div>
-					)
-				})}
-			</div>
+					})}
+				</div>
+			</ScrollArea>
 
 			<button
-				className='w-full mt-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition'
+				className='w-full mt-4 py-2 rounded bg-destructive text-destructive-foreground hover:opacity-90 transition disabled:opacity-60 disabled:cursor-not-allowed'
 				onClick={handleClearAll}
 				disabled={markRead.isPending}
 			>

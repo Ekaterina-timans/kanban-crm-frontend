@@ -19,11 +19,11 @@ export function StatusPieChart() {
 		period
 	)
 
-	if (isLoading) return <SkeletonWidget type="chart-pie" />
+	if (isLoading) return <SkeletonWidget type='chart-pie' />
 
 	if (!stats) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				Нет данных для отображения
 			</div>
 		)
@@ -39,9 +39,9 @@ export function StatusPieChart() {
 
 	if (total === 0) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				<div className='flex items-center justify-between mb-3'>
-					<h3 className='text-lg font-semibold text-blue-600'>Статусы задач</h3>
+					<h3 className='text-lg font-semibold text-primary'>Статусы задач</h3>
 
 					<PeriodSelect
 						value={period}
@@ -49,7 +49,7 @@ export function StatusPieChart() {
 					/>
 				</div>
 
-				<p className='text-sm text-gray-500 text-center py-6'>
+				<p className='text-sm text-muted-foreground text-center py-6'>
 					Нет данных за выбранный период
 				</p>
 			</div>
@@ -57,9 +57,9 @@ export function StatusPieChart() {
 	}
 
 	return (
-		<div className='bg-white border rounded-lg p-4 shadow-sm'>
+		<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 			<div className='flex items-center justify-between mb-3'>
-				<h3 className='text-lg font-semibold text-blue-600'>Статусы задач</h3>
+				<h3 className='text-lg font-semibold text-primary'>Статусы задач</h3>
 
 				<PeriodSelect
 					value={period}
@@ -79,7 +79,7 @@ export function StatusPieChart() {
 						outerRadius={80}
 						label
 					>
-						{data.map((entry, index) => (
+						{data.map((_, index) => (
 							<Cell
 								key={index}
 								fill={COLORS[index]}

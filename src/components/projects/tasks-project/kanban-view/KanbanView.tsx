@@ -55,18 +55,11 @@ export function KanbanView({
 	}, [columns])
 
 	const mouseSensor = useSensor(MouseSensor, {
-		activationConstraint: {
-			distance: 10
-		}
+		activationConstraint: { distance: 10 }
 	})
-
 	const touchSensor = useSensor(TouchSensor, {
-		activationConstraint: {
-			delay: 250,
-			tolerance: 5
-		}
+		activationConstraint: { delay: 250, tolerance: 5 }
 	})
-
 	const keyboardSensor = useSensor(KeyboardSensor, {
 		coordinateGetter: sortableKeyboardCoordinates
 	})
@@ -90,11 +83,9 @@ export function KanbanView({
 		setEditingColumn(null)
 	}
 
-	// Найти колонку, в которой находится задача
 	const findTaskColumn = (taskId: string) =>
 		currentColumns.find(col => col.tasks.some(task => task.id === taskId))
 
-	// Переместить задачу в другую колонку
 	const moveTask = (taskId: string, targetColumnId: string) => {
 		setCurrentColumns(prevCols => {
 			let taskToMove: ITask | null = null
@@ -139,18 +130,13 @@ export function KanbanView({
 		}
 
 		const activeColumn = findTaskColumn(activeTaskId)
-
 		if (!activeColumn || activeColumn.id === overColumnId) {
 			setActiveId(null)
 			return
 		}
 
 		moveTask(activeTaskId, overColumnId)
-		updateTaskColumn({
-			taskId: activeTaskId,
-			columnId: overColumnId
-		})
-
+		updateTaskColumn({ taskId: activeTaskId, columnId: overColumnId })
 		setActiveId(null)
 	}
 
@@ -158,10 +144,7 @@ export function KanbanView({
 		.getState()
 		.can(Permission.COLUMN_CREATE)
 
-	// Функция рендера задачи, передаём в Column и используем в DragOverlay
-	const renderTask = (task: ITask) => {
-		return <CardTask task={task} />
-	}
+	const renderTask = (task: ITask) => <CardTask task={task} />
 
 	return (
 		<DndContext
@@ -171,7 +154,7 @@ export function KanbanView({
 			onDragEnd={handleDragEnd}
 		>
 			<div className='flex px-6 py-5 gap-6 overflow-x-auto'>
-				{currentColumns && currentColumns.length > 0
+				{currentColumns?.length
 					? currentColumns.map(column => (
 							<Column
 								key={column.id}
@@ -181,20 +164,22 @@ export function KanbanView({
 							/>
 						))
 					: null}
+
 				{canCreateColumn && (
 					<Button
 						type='button'
 						variant='outline'
 						size='icon'
 						onClick={openCreateModal}
-						className='h-12 w-12 shrink-0'
+						className='h-12 w-12 shrink-0 bg-card text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground'
 					>
 						<Tooltip text='Добавить колонку'>
-							<Plus />
+							<Plus className='h-5 w-5' />
 						</Tooltip>
 					</Button>
 				)}
 			</div>
+
 			<DragOverlay>
 				{activeId
 					? (() => {
@@ -205,6 +190,7 @@ export function KanbanView({
 						})()
 					: null}
 			</DragOverlay>
+
 			<ColumnModal
 				isOpen={isModalOpen}
 				onClose={closeModal}

@@ -14,11 +14,17 @@ import { useSpaceAccessStore } from '@/store/useSpaceAccessStore'
 import { useCreateComment } from '@/hooks/comment/useCreateComment'
 import { useDeleteComment } from '@/hooks/comment/useDeleteComment'
 import { useGetComments } from '@/hooks/comment/useGetComments'
-
-import { CommentItem } from './CommentItem'
 import { useGetSpaceUsers } from '@/hooks/space-user/useGetSpaceUsers'
 
-export function TaskCommentsPanel({ taskId, spaceId }: { taskId: string, spaceId: string }) {
+import { CommentItem } from './CommentItem'
+
+export function TaskCommentsPanel({
+	taskId,
+	spaceId
+}: {
+	taskId: string
+	spaceId: string
+}) {
 	const [openId, setOpenId] = useState<string | number | null>(null)
 	const [replyTo, setReplyTo] = useState<any | null>(null)
 
@@ -44,15 +50,19 @@ export function TaskCommentsPanel({ taskId, spaceId }: { taskId: string, spaceId
 	if (!canRead) return null
 
 	return (
-		<div className='flex flex-col h-full min-h-0 border-l border-gray-200 pl-4'>
-			<h3 className='font-semibold text-blue-600 mb-3'>Комментарии</h3>
+		<div className='flex flex-col h-full min-h-0 border-l border-border pl-4'>
+			<h3 className='font-semibold text-foreground mb-3'>Комментарии</h3>
 
 			<ScrollArea className='flex-1 min-h-0 pr-1 mb-3'>
 				<div className='space-y-3'>
-					{isLoading && <p className='text-gray-400 text-sm'>Загрузка...</p>}
+					{isLoading && (
+						<p className='text-muted-foreground text-sm'>Загрузка...</p>
+					)}
 
 					{!isLoading && comments?.length === 0 && (
-						<p className='text-sm text-gray-400'>Комментариев пока нет.</p>
+						<p className='text-sm text-muted-foreground'>
+							Комментариев пока нет.
+						</p>
 					)}
 
 					{comments?.map(c => {
@@ -79,21 +89,29 @@ export function TaskCommentsPanel({ taskId, spaceId }: { taskId: string, spaceId
 
 			{/* Индикация «ответить на …» */}
 			{replyTo && (
-				<div className='mb-2 px-3 py-2 rounded-md bg-blue-50 border border-blue-200 text-sm flex items-start justify-between'>
+				<div
+					className='mb-2 px-3 py-2 rounded-md border text-sm flex items-start justify-between'
+					style={{
+						backgroundColor: 'hsl(var(--info))',
+						borderColor: 'hsl(var(--border))',
+						color: 'hsl(var(--info-foreground))'
+					}}
+				>
 					<div className='pr-3'>
-						<div className='font-medium text-blue-700'>
+						<div className='font-medium'>
 							Ответ на:{' '}
 							{replyTo.user?.name || replyTo.user?.email || 'Комментарий'}
 						</div>
+
 						{replyTo.content && (
-							<div className='text-blue-800 opacity-80 line-clamp-2'>
-								{replyTo.content}
-							</div>
+							<div className='opacity-80 line-clamp-2'>{replyTo.content}</div>
 						)}
 					</div>
+
 					<button
-						className='text-blue-600 hover:text-blue-700'
+						className='opacity-80 hover:opacity-100 transition'
 						onClick={() => setReplyTo(null)}
+						type='button'
 					>
 						отменить
 					</button>
@@ -101,7 +119,7 @@ export function TaskCommentsPanel({ taskId, spaceId }: { taskId: string, spaceId
 			)}
 
 			{canAdd && (
-				<div className='w-full border-t-2 border-slate-200'>
+				<div className='w-full border-t border-border'>
 					<MessageBox
 						mentionMembers={taskMembers}
 						onSend={async ({ text, files, mentioned_user_ids }) => {

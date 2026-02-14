@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
+import { useAuth } from '@/providers/AuthProvider'
+
 import {
 	InviteToGroupDto,
 	InviteToGroupResponse
@@ -10,15 +12,16 @@ import { groupInvitationsService } from '@/services/group-invitations.service'
 
 export function useInviteToGroup() {
 	const queryClient = useQueryClient()
+	const { currentGroupId } = useAuth()
 
 	const { mutate: inviteToGroup, isPending } = useMutation<
-		InviteToGroupResponse, // что возвращает (response)
-		Error, // тип ошибки (можно any, если не хочешь кастомный Error)
-		InviteToGroupDto // что передаём (input)
+		InviteToGroupResponse,
+		any,
+		InviteToGroupDto
 	>({
 		mutationKey: ['invite to group'],
-		mutationFn: (dto: InviteToGroupDto) =>
-			groupInvitationsService.inviteToGroup(dto),
+		mutationFn: dto =>
+			groupInvitationsService.inviteToGroup(String(currentGroupId), dto),
 		onSuccess: (_res, variables) => {
 			queryClient.invalidateQueries({
 				queryKey: ['group invitations', variables.group_id]

@@ -4,9 +4,9 @@ import { useState } from 'react'
 
 import { PeriodSelect } from '@/components/ui/period-select/PeriodSelect'
 import { PeriodParams } from '@/components/ui/period-select/period'
+import { SkeletonWidget } from '@/components/ui/skeleton/SkeletonWidget'
 
 import { useWidgetStatistics } from '@/hooks/statistics/useWidgetStatistics'
-import { SkeletonWidget } from '@/components/ui/skeleton/SkeletonWidget'
 
 export function ProductivityIndexCard() {
 	const [period, setPeriod] = useState<PeriodParams>({ period: 'month' })
@@ -17,13 +17,13 @@ export function ProductivityIndexCard() {
 	)
 
 	if (isLoading || index === undefined) {
-		return <SkeletonWidget type="card" />
+		return <SkeletonWidget type='card' />
 	}
 
 	return (
-		<div className='bg-white border rounded-lg p-4 shadow-sm'>
+		<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 			<div className='flex items-center justify-between mb-2'>
-				<h3 className='text-lg font-semibold text-blue-600'>
+				<h3 className='text-lg font-semibold text-primary'>
 					Индекс продуктивности
 				</h3>
 
@@ -35,7 +35,7 @@ export function ProductivityIndexCard() {
 
 			<p className='text-5xl font-bold text-purple-600'>{index}</p>
 
-			<p className='text-sm text-gray-500 mt-2 leading-5'>
+			<p className='text-sm text-muted-foreground mt-2 leading-5'>
 				Индекс рассчитывается так:
 				<br />
 				<b>+3 балла</b> за каждую завершённую задачу.

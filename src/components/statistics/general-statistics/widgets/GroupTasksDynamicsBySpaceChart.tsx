@@ -51,13 +51,13 @@ export function GroupTasksDynamicsBySpaceChart() {
 
 	if (spaces.length === 0) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm h-full flex flex-col'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm h-full flex flex-col'>
 				<div className='flex items-center justify-between mb-3 gap-2'>
 					<div>
-						<h3 className='text-lg font-semibold text-blue-600'>
+						<h3 className='text-lg font-semibold text-primary'>
 							Динамика задач по проектам
 						</h3>
-						<p className='text-xs text-gray-500'>
+						<p className='text-xs text-muted-foreground'>
 							Создано / завершено / баланс по дням
 						</p>
 					</div>
@@ -68,7 +68,7 @@ export function GroupTasksDynamicsBySpaceChart() {
 					/>
 				</div>
 
-				<div className='flex-1 flex items-center justify-center text-gray-400 text-sm'>
+				<div className='flex-1 flex items-center justify-center text-muted-foreground text-sm'>
 					Нет данных по задачам за выбранный период
 				</div>
 			</div>
@@ -76,13 +76,13 @@ export function GroupTasksDynamicsBySpaceChart() {
 	}
 
 	return (
-		<div className='bg-white border rounded-lg p-4 shadow-sm h-full flex flex-col'>
+		<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm h-full flex flex-col'>
 			<div className='flex items-center justify-between mb-3 gap-2'>
 				<div>
-					<h3 className='text-lg font-semibold text-blue-600'>
+					<h3 className='text-lg font-semibold text-primary'>
 						Динамика задач по проектам
 					</h3>
-					<p className='text-xs text-gray-500'>
+					<p className='text-xs text-muted-foreground'>
 						Создано / завершено / баланс по дням
 					</p>
 				</div>

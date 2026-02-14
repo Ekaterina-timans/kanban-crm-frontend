@@ -19,7 +19,6 @@ import { useDeleteTask } from '@/hooks/task/useDeleteTask'
 
 import { SortableCardTask } from '../task/SortableCardTask'
 import { TaskModal } from '../task/TaskModal'
-import { TaskModalView } from '../task/task-id/TaskModalView'
 
 import { HeaderColumn } from './HeaderColumn'
 
@@ -82,10 +81,11 @@ export function Column({
 					onEdit={onEdit}
 					onDelete={handleDelete}
 				/>
+
 				{canCreateTask && (
 					<div
 						onClick={() => setCreateModalOpen(true)}
-						className='mx-auto mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white hover:bg-slate-100 transition-colors cursor-pointer'
+						className='mx-auto mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer'
 					>
 						<Tooltip text='Создать задачу'>
 							<Plus className='h-5 w-5' />
@@ -93,6 +93,7 @@ export function Column({
 					</div>
 				)}
 			</div>
+
 			<SortableContext
 				items={column.tasks.map(task => task.id)}
 				strategy={verticalListSortingStrategy}
@@ -109,9 +110,10 @@ export function Column({
 						/>
 					))
 				) : (
-					<div></div>
+					<div />
 				)}
 			</SortableContext>
+
 			<TaskModal
 				spaceId={column.space_id}
 				isOpen={isCreateModalOpen}

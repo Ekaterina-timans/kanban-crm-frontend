@@ -74,24 +74,23 @@ export function TaskModalView({
 			)}
 		>
 			{/* Заголовок */}
-			<div className='flex items-start justify-between border-b border-border'>
-				<div className='flex flex-col'>
-					<div className='flex items-center gap-2'>
-						<h2 className='text-xl font-semibold text-foreground'>
+			<div className='flex items-start justify-between border-b border-border p-1'>
+				<div className='flex flex-col min-w-0'>
+					<div className='flex items-center gap-2 min-w-0'>
+						<h2 className='text-xl font-semibold text-foreground min-w-0'>
 							{isEditing ? (
 								<input
 									type='text'
 									value={editedName}
 									onChange={e => setEditedName(e.target.value)}
-									className='h-9 rounded-xl border border-input bg-background px-3 text-base text-foreground shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring'
+									className='h-9 w-full rounded-xl border border-input bg-background px-3 text-base text-foreground shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring'
 									autoFocus
 								/>
 							) : (
-								<>
-									<span>{task.name}</span>
-								</>
+								<span className='truncate'>{task.name}</span>
 							)}
 						</h2>
+
 						{canEditTask &&
 							(isEditing ? (
 								<Button
@@ -99,7 +98,7 @@ export function TaskModalView({
 									size='icon'
 									onClick={handleSave}
 									Icon={Check}
-									iconClassName='text-green-600'
+									iconClassName='text-primary'
 									title='Сохранить'
 								/>
 							) : (
@@ -108,32 +107,35 @@ export function TaskModalView({
 									size='sm'
 									onClick={handleEditToggle}
 									Icon={Pencil}
-									iconClassName='text-blue-500'
+									iconClassName='text-muted-foreground'
 									title='Редактировать название'
 								/>
 							))}
 					</div>
+
 					<div className='flex items-center gap-3 mt-1'>
 						<span className='text-sm text-muted-foreground bg-muted px-2 py-0.5 rounded-lg border border-border'>
 							ID: #{task.id}
 						</span>
+
 						<Button
 							variant='ghost'
 							size='sm'
 							onClick={() => navigator.clipboard.writeText(`#${task.id}`)}
-							className='flex items-center gap-1 text-muted-foreground hover:text-primary'
+							className='flex items-center gap-1 text-muted-foreground hover:text-foreground hover:bg-accent'
 						>
 							<Copy className='w-4 h-4' />
 							<span className='text-sm'>Скопировать ID</span>
 						</Button>
 					</div>
-					<p className='text-sm text-gray-500 mt-1'>
+
+					<p className='text-sm text-muted-foreground mt-1'>
 						Создано: {new Date(task.created_at).toLocaleDateString('ru-RU')}
 						{task.author && (
 							<>
 								{' '}
 								•{' '}
-								<span className='text-gray-700 font-medium'>
+								<span className='text-foreground font-medium'>
 									Автор: {task.author.name || task.author.email}
 								</span>
 							</>
@@ -147,9 +149,11 @@ export function TaskModalView({
 						size='icon'
 						onClick={() => setFullScreen(!isFullScreen)}
 						Icon={isFullScreen ? Minimize2 : MoveDiagonal}
-						iconClassName='text-blue-500'
+						iconClassName='text-muted-foreground'
+						className='hover:bg-accent'
 						title={isFullScreen ? 'Свернуть' : 'Развернуть'}
 					/>
+
 					<Button
 						variant='ghost'
 						size='icon'
@@ -157,6 +161,7 @@ export function TaskModalView({
 						Icon={X}
 						className='hover:bg-destructive/10 transition-colors'
 						iconClassName='text-destructive'
+						title='Закрыть'
 					/>
 				</div>
 			</div>

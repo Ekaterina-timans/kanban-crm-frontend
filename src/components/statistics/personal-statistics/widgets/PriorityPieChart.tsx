@@ -5,9 +5,9 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 import { PeriodSelect } from '@/components/ui/period-select/PeriodSelect'
 import { PeriodParams } from '@/components/ui/period-select/period'
+import { SkeletonWidget } from '@/components/ui/skeleton/SkeletonWidget'
 
 import { useWidgetStatistics } from '@/hooks/statistics/useWidgetStatistics'
-import { SkeletonWidget } from '@/components/ui/skeleton/SkeletonWidget'
 
 const COLORS = ['#93c5fd', '#facc15', '#f87171']
 
@@ -25,7 +25,7 @@ export function PriorityPieChart() {
 
 	if (!stats) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				Нет данных для отображения
 			</div>
 		)
@@ -41,9 +41,9 @@ export function PriorityPieChart() {
 
 	if (total === 0) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				<div className='flex items-center justify-between mb-3'>
-					<h3 className='text-lg font-semibold text-blue-600'>
+					<h3 className='text-lg font-semibold text-primary'>
 						Приоритеты задач
 					</h3>
 
@@ -53,7 +53,7 @@ export function PriorityPieChart() {
 					/>
 				</div>
 
-				<p className='text-sm text-gray-500 text-center py-6'>
+				<p className='text-sm text-muted-foreground text-center py-6'>
 					Нет данных за выбранный период
 				</p>
 			</div>
@@ -61,11 +61,9 @@ export function PriorityPieChart() {
 	}
 
 	return (
-		<div className='bg-white border rounded-lg p-4 shadow-sm'>
+		<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 			<div className='flex items-center justify-between mb-3'>
-				<h3 className='text-lg font-semibold text-blue-600'>
-					Приоритеты задач
-				</h3>
+				<h3 className='text-lg font-semibold text-primary'>Приоритеты задач</h3>
 
 				<PeriodSelect
 					value={period}
@@ -85,7 +83,7 @@ export function PriorityPieChart() {
 						outerRadius={80}
 						label
 					>
-						{data.map((entry, index) => (
+						{data.map((_, index) => (
 							<Cell
 								key={index}
 								fill={COLORS[index]}

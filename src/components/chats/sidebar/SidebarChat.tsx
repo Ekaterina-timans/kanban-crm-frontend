@@ -48,13 +48,13 @@ export function SidebarChat() {
 				/>
 				<span className='text-sm'>Создать новый чат</span>
 			</Button>
-			<ScrollArea className='min-h-0 flex-1 mt-3 pr-1'>
+			<ScrollArea className='min-h-0 flex-1 mt-3 pr-1 overflow-x-hidden'>
 				{/* Без запроса — обычный список */}
 				{!hasQuery && <ListCardsChats search={search} />}
 
 				{/* С запросом — результаты глобального поиска */}
 				{hasQuery && (
-					<div className='mt-3 overflow-auto space-y-3'>
+					<div className='mt-3 overflow-x-hidden space-y-3'>
 						<div>
 							<p className='px-1 text-xs text-muted-foreground mb-1'>
 								Чаты {isFetching && '…'}
@@ -70,7 +70,9 @@ export function SidebarChat() {
 										].join(' ')}
 										onClick={() => selectChat(String(c.id))}
 									>
-										<div className='font-medium'>{c.title}</div>
+										<div className='font-medium truncate min-w-0'>
+											{c.title}
+										</div>
 										{c.last_message && (
 											<div className='text-xs text-muted-foreground truncate'>
 												{c.last_message}

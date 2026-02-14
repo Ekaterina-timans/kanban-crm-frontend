@@ -77,11 +77,13 @@ export function CardInfoProject({
 					)}
 
 					{users.length === 0 && (
-						<p className='text-[12px] text-muted-foreground ml-1'>Нет участников</p>
+						<p className='text-[12px] text-muted-foreground ml-1'>
+							Нет участников
+						</p>
 					)}
 				</div>
 
-				<div className='mt-2 text-[13px] text-muted-foreground'>
+				<div className='mt-2 text-[13px] text-muted-foreground line-clamp-3'>
 					{item.description || 'Описание отсутствует'}
 				</div>
 			</div>

@@ -58,6 +58,19 @@ html {
 		--chart-4: 280 65% 60%;
 		--chart-5: 0 84% 60%;
 
+		/* Status surfaces (для цветных плашек в карточках) */
+		--info: 214 100% 97%;        /* светло-синий фон */
+		--info-foreground: 214 80% 30%;
+
+		--success: 142 76% 95%;      /* светло-зелёный фон */
+		--success-foreground: 142 72% 24%;
+
+		--warning: 48 100% 93%;      /* светло-жёлтый фон */
+		--warning-foreground: 32 95% 28%;
+
+		--danger: 0 100% 96%;        /* светло-красный фон */
+		--danger-foreground: 0 72% 35%;
+
 		--radius: 0.6rem;
 	}
 	.dark {
@@ -100,6 +113,19 @@ html {
 		--chart-3: 43 96% 56%;
 		--chart-4: 280 65% 60%;
 		--chart-5: 0 84% 60%;
+
+		/* Status surfaces (dark) */
+		--info: 214 60% 18%;
+		--info-foreground: 214 100% 75%;
+
+		--success: 142 45% 18%;
+		--success-foreground: 142 70% 70%;
+
+		--warning: 40 55% 18%;
+		--warning-foreground: 48 100% 72%;
+
+		--danger: 0 55% 18%;
+		--danger-foreground: 0 100% 76%;
 	}
 }
 

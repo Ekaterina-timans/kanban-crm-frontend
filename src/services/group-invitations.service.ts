@@ -16,9 +16,9 @@ class GroupInvitationsService {
 		return response
 	}
 
-	async inviteToGroup(data: InviteToGroupDto) {
+	async inviteToGroup(groupId: string, data: InviteToGroupDto) {
 		const response = await axiosRequest.post(
-			`${this.BASE_URL}/group-invitations/invite`,
+			`${this.BASE_URL}/${groupId}/group-invitations/invite`,
 			data
 		)
 		return response.data

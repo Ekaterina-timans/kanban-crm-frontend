@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useRef } from 'react'
 
 interface ModalWrapperProps {
@@ -5,13 +7,17 @@ interface ModalWrapperProps {
 	onClose: () => void
 	children: React.ReactNode
 	className?: string
+	disableClose?: boolean
+	transparentBackdrop?: boolean
 }
 
 export function ModalWrapper({
 	isOpen,
 	onClose,
 	children,
-	className
+	className,
+	disableClose = false,
+	transparentBackdrop = false
 }: ModalWrapperProps) {
 	const modalRef = useRef<HTMLDivElement>(null)
 
@@ -33,15 +39,17 @@ export function ModalWrapper({
 	useEffect(() => {
 		if (!isOpen) return
 		function handleKeyDown(e: KeyboardEvent) {
+			if (disableClose) return
 			if (e.key === 'Escape') onClose()
 		}
 		window.addEventListener('keydown', handleKeyDown)
 		return () => window.removeEventListener('keydown', handleKeyDown)
-	}, [isOpen, onClose])
+	}, [isOpen, onClose, disableClose])
 
 	function handleBackdropClick(
 		e: React.MouseEvent<HTMLDivElement, MouseEvent>
 	) {
+		if (disableClose) return
 		if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
 			onClose()
 		}
@@ -55,7 +63,14 @@ export function ModalWrapper({
 			onMouseDown={handleBackdropClick}
 			tabIndex={-1}
 		>
-			<div className='absolute inset-0 bg-black/40 backdrop-blur-[2px]' />
+			<div
+				className={[
+					'absolute inset-0',
+					transparentBackdrop
+						? 'bg-transparent'
+						: 'bg-black/40 backdrop-blur-[2px]'
+				].join(' ')}
+			/>
 
 			<div
 				ref={modalRef}

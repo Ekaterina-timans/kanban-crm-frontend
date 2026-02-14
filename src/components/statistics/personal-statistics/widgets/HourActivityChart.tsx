@@ -13,9 +13,9 @@ import {
 
 import { PeriodSelect } from '@/components/ui/period-select/PeriodSelect'
 import { PeriodParams } from '@/components/ui/period-select/period'
+import { SkeletonWidget } from '@/components/ui/skeleton/SkeletonWidget'
 
 import { useWidgetStatistics } from '@/hooks/statistics/useWidgetStatistics'
-import { SkeletonWidget } from '@/components/ui/skeleton/SkeletonWidget'
 
 export function HourActivityChart() {
 	const [period, setPeriod] = useState<PeriodParams>({ period: 'month' })
@@ -26,12 +26,12 @@ export function HourActivityChart() {
 	)
 
 	if (isLoading) {
-		return <SkeletonWidget type="chart-line" />
+		return <SkeletonWidget type='chart-line' />
 	}
 
 	if (!stats) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				Нет данных для отображения
 			</div>
 		)
@@ -41,9 +41,9 @@ export function HourActivityChart() {
 
 	if (!hasActivity) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				<div className='flex items-center justify-between mb-3'>
-					<h3 className='text-lg font-semibold text-blue-600'>
+					<h3 className='text-lg font-semibold text-primary'>
 						Активность по часам
 					</h3>
 					<PeriodSelect
@@ -52,7 +52,7 @@ export function HourActivityChart() {
 					/>
 				</div>
 
-				<p className='text-sm text-gray-500 text-center py-6'>
+				<p className='text-sm text-muted-foreground text-center py-6'>
 					Нет активности за выбранный период
 				</p>
 			</div>
@@ -65,9 +65,9 @@ export function HourActivityChart() {
 	}))
 
 	return (
-		<div className='bg-white border rounded-lg p-4 shadow-sm'>
+		<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 			<div className='flex items-center justify-between mb-3'>
-				<h3 className='text-lg font-semibold text-blue-600'>
+				<h3 className='text-lg font-semibold text-primary'>
 					Активность по часам
 				</h3>
 
@@ -88,7 +88,7 @@ export function HourActivityChart() {
 					<Tooltip />
 					<Bar
 						dataKey='count'
-						fill='#60a5fa'
+						fill='hsl(var(--primary))'
 					/>
 				</BarChart>
 			</ResponsiveContainer>

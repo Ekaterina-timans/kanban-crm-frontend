@@ -28,7 +28,7 @@ export function TasksLineChart() {
 
 	if (!stats) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				Нет данных для отображения
 			</div>
 		)
@@ -36,9 +36,9 @@ export function TasksLineChart() {
 
 	if (!stats.history || stats.history.length === 0) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				<div className='flex items-center justify-between mb-3'>
-					<h3 className='text-lg font-semibold text-blue-600'>
+					<h3 className='text-lg font-semibold text-primary'>
 						Выполненные задачи (по дням)
 					</h3>
 
@@ -48,7 +48,7 @@ export function TasksLineChart() {
 					/>
 				</div>
 
-				<p className='text-sm text-gray-500 text-center py-6'>
+				<p className='text-sm text-muted-foreground text-center py-6'>
 					Нет выполненных задач за выбранный период
 				</p>
 			</div>
@@ -61,9 +61,9 @@ export function TasksLineChart() {
 	}))
 
 	return (
-		<div className='bg-white border rounded-lg p-4 shadow-sm'>
+		<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 			<div className='flex items-center justify-between mb-3'>
-				<h3 className='text-lg font-semibold text-blue-600'>
+				<h3 className='text-lg font-semibold text-primary'>
 					Выполненные задачи (по дням)
 				</h3>
 
@@ -85,7 +85,7 @@ export function TasksLineChart() {
 					<Line
 						type='monotone'
 						dataKey='count'
-						stroke='#2563eb'
+						stroke='hsl(var(--primary))'
 						strokeWidth={3}
 					/>
 				</LineChart>

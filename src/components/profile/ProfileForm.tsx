@@ -8,14 +8,16 @@ import { Button } from '@/components/ui/button/Button'
 import Field from '@/components/ui/field/Field'
 import { SelectComponent } from '@/components/ui/select/SelectComponent'
 
-import { TIMEZONE_OPTIONS } from '@/config/timezones.constants'
-import { useTimezoneStore } from '@/store/useTimezoneStore'
-
-import { userPreferencesService } from '@/services/user-preferences.service'
-import { getPublicUrl } from '@/utils/getPublicUrl'
-import { formatDateForCard } from '@/utils/date-utils'
 import { ProfileFormProps, ProfileFormValues } from '@/types/profile.types'
 
+import { TIMEZONE_OPTIONS } from '@/config/timezones.constants'
+
+import { useTimezoneStore } from '@/store/useTimezoneStore'
+
+import { formatDateForCard } from '@/utils/date-utils'
+import { getPublicUrl } from '@/utils/getPublicUrl'
+
+import { userPreferencesService } from '@/services/user-preferences.service'
 
 export function ProfileForm({
 	title,
@@ -102,7 +104,7 @@ export function ProfileForm({
 
 	if (isLoading) {
 		return (
-			<div className='text-center text-slate-500 py-10'>
+			<div className='text-center text-muted-foreground py-10'>
 				Загрузка профиля...
 			</div>
 		)
@@ -110,16 +112,15 @@ export function ProfileForm({
 
 	return (
 		<div className='py-6 px-8 w-full'>
-			<h2 className='text-xl font-semibold text-blue-600 mb-6'>{title}</h2>
+			<h2 className='text-xl font-semibold text-primary mb-6'>{title}</h2>
 
-			<div className='bg-white border-2 border-slate-200 shadow-sm rounded-xl p-6 max-w-7xl transition-all'>
+			<div className='bg-card text-card-foreground border border-border shadow-sm rounded-xl p-6 max-w-7xl transition-all'>
 				<form
 					onSubmit={handleSubmit(submitHandler)}
 					className='space-y-5'
 				>
-					{/* Аватар */}
 					<div className='flex items-center gap-5'>
-						<div className='w-24 h-24 rounded-full bg-gray-200 overflow-hidden shrink-0'>
+						<div className='w-24 h-24 rounded-full bg-muted overflow-hidden shrink-0'>
 							{avatarPreview ? (
 								<img
 									src={avatarPreview || undefined}
@@ -127,7 +128,7 @@ export function ProfileForm({
 									className='w-full h-full object-cover'
 								/>
 							) : (
-								<div className='flex items-center justify-center h-full text-gray-400 text-sm'>
+								<div className='flex items-center justify-center h-full text-muted-foreground text-sm'>
 									Нет фото
 								</div>
 							)}
@@ -141,17 +142,16 @@ export function ProfileForm({
 								type='file'
 								accept='image/*'
 								{...register('avatar')}
-								className='block text-sm text-gray-600 cursor-pointer
+								className='block text-sm text-muted-foreground cursor-pointer
 									file:mr-3 file:py-2 file:px-4
 									file:rounded-lg file:border-0
 									file:text-sm file:font-semibold
-									file:bg-blue-50 file:text-blue-600
-									hover:file:bg-blue-100 transition'
+									file:bg-secondary file:text-primary
+									hover:file:opacity-90 transition'
 							/>
 						</div>
 					</div>
 
-					{/* Основные поля */}
 					<div className='grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-5'>
 						<div>
 							<label className='block text-sm font-semibold mb-1'>Имя</label>
@@ -189,7 +189,7 @@ export function ProfileForm({
 								disabled={isSavingTimezone}
 							/>
 							{isSavingTimezone && (
-								<p className='text-xs text-slate-500 mt-1'>
+								<p className='text-xs text-muted-foreground mt-1'>
 									Сохраняем часовой пояс...
 								</p>
 							)}
@@ -197,7 +197,7 @@ export function ProfileForm({
 					</div>
 
 					{user?.created_at && (
-						<p className='text-sm text-slate-500 mt-6'>
+						<p className='text-sm text-muted-foreground mt-6'>
 							Дата регистрации: {formatDateForCard(user.created_at)}
 						</p>
 					)}

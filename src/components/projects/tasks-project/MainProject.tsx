@@ -5,7 +5,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { ScrollArea } from '@/components/ui/scroll/scroll-area'
 import { MainProjectSkeleton } from '@/components/ui/skeleton/MainProjectSkeleton'
 
-import { DEFAULT_SPACE_COLOR } from '@/constants/colors'
+import {
+	DEFAULT_SPACE_COLOR,
+	resolveSpaceBgColorForTheme
+} from '@/constants/colors'
 
 import { ITaskFilters } from '@/types/space.types'
 
@@ -21,6 +24,7 @@ import { getPriorityOptions, getStatusOptions } from '@/utils/selectOptions'
 
 import { API_URL_IMAGE } from '@/api/interceptors'
 
+import { TaskModalHost } from './TaskModalHost'
 import { HeaderProject } from './header/HeaderProject'
 import {
 	ITaskFiltersUI,
@@ -29,9 +33,28 @@ import {
 } from './header/task-filters-ui.types'
 import { KanbanView } from './kanban-view/KanbanView'
 import { PanelSettingsContainer } from './settings-project/PanelSettingsContainer'
-import { TaskModalHost } from './TaskModalHost'
+
+function useIsDarkByHtmlClass() {
+	const [isDark, setIsDark] = useState(false)
+
+	useEffect(() => {
+		const el = document.documentElement
+		const update = () => setIsDark(el.classList.contains('dark'))
+		update()
+
+		const obs = new MutationObserver(update)
+		obs.observe(el, { attributes: true, attributeFilter: ['class'] })
+
+		return () => obs.disconnect()
+	}, [])
+
+	return isDark
+}
 
 export function MainProject({ spaceId }: { spaceId: string | null }) {
+	// -------------------------
+	// Hooks — ВСЕГДА до return
+	// -------------------------
 	const { data: spaceUsers = [] } = useGetSpaceUsers(spaceId ?? '')
 	const { isLoading: isRoleLoading } = useFetchSpaceRole(spaceId ?? '')
 	const { open } = useSettingsPanel()
@@ -39,13 +62,16 @@ export function MainProject({ spaceId }: { spaceId: string | null }) {
 	const access = useSpaceAccessStore(state => state.getAccess())
 	const role = access?.role
 
+	const isDark = useIsDarkByHtmlClass()
+
 	const [isFiltersOpen, setIsFiltersOpen] = useState(false)
 	const [draftFilters, setDraftFilters] =
 		useState<ITaskFiltersUI>(defaultTaskFiltersUI)
 	const [appliedFilters, setAppliedFilters] =
 		useState<ITaskFiltersUI>(defaultTaskFiltersUI)
 
-	// чтобы не таскать пустые строки
+	const { data: meta, isLoading: metaLoading } = useSpaceMeta(spaceId)
+
 	function draftToString(v: string | null | undefined) {
 		const s = (v ?? '').trim()
 		return s === '' ? undefined : s
@@ -53,7 +79,6 @@ export function MainProject({ spaceId }: { spaceId: string | null }) {
 
 	const apiFilters: ITaskFilters = useMemo(() => {
 		const ANY = '__any__'
-
 		return {
 			task_q: draftToString(appliedFilters.task_q),
 
@@ -80,27 +105,19 @@ export function MainProject({ spaceId }: { spaceId: string | null }) {
 		}
 	}, [appliedFilters])
 
-	const { data: meta, isLoading: metaLoading } = useSpaceMeta(spaceId)
-	const { data: kanban, isLoading: kanbanLoading } = useSpaceKanban(
-		spaceId,
-		apiFilters
-	)
+	const { data: kanban } = useSpaceKanban(spaceId, apiFilters)
 
+	// handlers
 	const onToggleFilters = () => setIsFiltersOpen(prev => !prev)
-
-	const onChangeFilters = (patch: Partial<ITaskFiltersUI>) => {
+	const onChangeFilters = (patch: Partial<ITaskFiltersUI>) =>
 		setDraftFilters(prev => ({ ...prev, ...patch }))
-	}
-
-	const onApplyFilters = () => {
-		setAppliedFilters(draftFilters)
-	}
-
+	const onApplyFilters = () => setAppliedFilters(draftFilters)
 	const onResetFilters = () => {
 		setDraftFilters(defaultTaskFiltersUI)
 		setAppliedFilters(defaultTaskFiltersUI)
 	}
 
+	// options
 	const assigneeOptions: Option[] = useMemo(() => {
 		return (spaceUsers ?? [])
 			.filter((su: any) => su?.user?.id)
@@ -113,50 +130,72 @@ export function MainProject({ spaceId }: { spaceId: string | null }) {
 	const statusOptions: Option[] = useMemo(() => getStatusOptions(), [])
 	const priorityOptions: Option[] = useMemo(() => getPriorityOptions(), [])
 
-	if (metaLoading || isRoleLoading) return <MainProjectSkeleton />
-
-	if (!meta) {
-		return <div>Проекты не найдены.</div>
-	}
-
+	// -------------------------
+	// Вычисления — тоже ДО return
+	// meta может быть undefined → safe fallback
+	// -------------------------
 	const canOpenSettings = role === 'owner' || role === 'editor'
 
-	const backgroundStyle =
-		typeof meta.backgroundImage === 'string' && meta.backgroundImage
-			? {
-					backgroundImage: `url(${API_URL_IMAGE}${meta.backgroundImage})`,
-					backgroundSize: 'cover',
-					backgroundPosition: 'center',
-					minHeight: 'calc(100vh - 80px)'
-				}
-			: {
-					background: meta.backgroundColor || DEFAULT_SPACE_COLOR,
-					minHeight: 'calc(100vh - 80px)'
-				}
+	const bgColorRaw = meta?.backgroundColor || DEFAULT_SPACE_COLOR
+	const bgImageRaw =
+		typeof meta?.backgroundImage === 'string' ? meta.backgroundImage : ''
 
+	const resolvedBgColor = useMemo(() => {
+		// meta.backgroundColor ХРАНИМ light, а тут подменяем на dark при необходимости
+		return resolveSpaceBgColorForTheme(bgColorRaw, isDark)
+	}, [bgColorRaw, isDark])
+
+	const backgroundStyle = useMemo(() => {
+		if (bgImageRaw) {
+			return {
+				backgroundImage: `url(${API_URL_IMAGE}${bgImageRaw})`,
+				backgroundSize: 'cover',
+				backgroundPosition: 'center',
+				minHeight: 'calc(100vh - 80px)'
+			} as const
+		}
+
+		return {
+			background: resolvedBgColor,
+			minHeight: 'calc(100vh - 80px)'
+		} as const
+	}, [bgImageRaw, resolvedBgColor])
+
+	// -------------------------
+	// Ранние return — ПОСЛЕ всех хуков/мемо
+	// -------------------------
+	if (metaLoading || isRoleLoading) return <MainProjectSkeleton />
+	if (!meta) return <div>Проекты не найдены.</div>
+
+	// -------------------------
+	// Render
+	// -------------------------
 	return (
 		<div
 			style={backgroundStyle}
 			className='relative h-full pl-1 flex flex-col'
 		>
 			<div className='pointer-events-none absolute inset-0 bg-background/10 dark:bg-background/20' />
+
 			<div className='relative z-10 h-full flex flex-col min-h-0'>
-				<HeaderProject
-					name={meta.name}
-					description={meta.description}
-					onSettingsClick={() => open(String(meta.id), 'space')}
-					canOpenSettings={canOpenSettings}
-					isFiltersOpen={isFiltersOpen}
-					onToggleFilters={onToggleFilters}
-					filters={draftFilters}
-					appliedFilters={appliedFilters}
-					onChangeFilters={onChangeFilters}
-					onApplyFilters={onApplyFilters}
-					onResetFilters={onResetFilters}
-					assigneeOptions={assigneeOptions}
-					statusOptions={statusOptions}
-					priorityOptions={priorityOptions}
-				/>
+				<div className='mx-3 mt-3 rounded-2xl kanban-surface-strong'>
+					<HeaderProject
+						name={meta.name}
+						description={meta.description}
+						onSettingsClick={() => open(String(meta.id), 'space')}
+						canOpenSettings={canOpenSettings}
+						isFiltersOpen={isFiltersOpen}
+						onToggleFilters={onToggleFilters}
+						filters={draftFilters}
+						appliedFilters={appliedFilters}
+						onChangeFilters={onChangeFilters}
+						onApplyFilters={onApplyFilters}
+						onResetFilters={onResetFilters}
+						assigneeOptions={assigneeOptions}
+						statusOptions={statusOptions}
+						priorityOptions={priorityOptions}
+					/>
+				</div>
 
 				<ScrollArea className='min-h-0 flex-1 z-20'>
 					<KanbanView
@@ -167,6 +206,7 @@ export function MainProject({ spaceId }: { spaceId: string | null }) {
 
 				{canOpenSettings && <PanelSettingsContainer />}
 			</div>
+
 			<TaskModalHost />
 		</div>
 	)

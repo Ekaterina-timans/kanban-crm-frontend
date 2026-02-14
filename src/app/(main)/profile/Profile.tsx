@@ -13,7 +13,9 @@ export function Profile() {
 
 	if (!user && !isLoading) {
 		return (
-			<div className='text-center text-slate-500 py-10'>Профиль не найден</div>
+			<div className='text-center text-muted-foreground py-10'>
+				Профиль не найден
+			</div>
 		)
 	}
 

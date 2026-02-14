@@ -8,8 +8,6 @@ import { SelectComponent } from '@/components/ui/select/SelectComponent'
 
 import { IChecklist } from '@/types/checklist.types'
 
-import { formatDateForCard } from '@/utils/date-utils'
-
 interface ChecklistListProps {
 	checklists: IChecklist[]
 	onAddChecklist: () => void
@@ -50,13 +48,14 @@ export const ChecklistList = ({
 	return (
 		<div className='space-y-4 mb-1'>
 			<div className='flex justify-between items-center'>
-				<h3 className='font-semibold text-blue-600'>Чек-листы</h3>
+				<h3 className='font-semibold text-foreground'>Чек-листы</h3>
+
 				{canEditTask && (
 					<Button
 						onClick={onAddChecklist}
 						size='sm'
 						variant='outline'
-						className='text-blue-600 border-blue-400'
+						className='border-border text-foreground hover:bg-accent hover:text-accent-foreground'
 					>
 						+ Добавить чек-лист
 					</Button>
@@ -71,9 +70,9 @@ export const ChecklistList = ({
 				return (
 					<div
 						key={list.id}
-						className='border rounded-lg p-3 space-y-3 bg-white'
+						className='border border-border rounded-lg p-3 space-y-3 bg-card'
 					>
-						<div className='flex justify-between items-center'>
+						<div className='flex justify-between items-center gap-2'>
 							<Field
 								defaultValue={list.title || 'Новый чек-лист'}
 								placeholder='Название чек-листа'
@@ -88,19 +87,20 @@ export const ChecklistList = ({
 							/>
 
 							{canEditTask && (
-								<div className='flex items-center gap-2 ml-2'>
+								<div className='flex items-center gap-2 ml-2 shrink-0'>
 									<Button
 										variant='ghost'
 										size='icon'
-										className='text-red-500 hover:text-red-600'
+										className='text-destructive hover:bg-destructive/10'
 										onClick={() => onDeleteChecklist(list.id)}
+										title='Удалить чек-лист'
 									>
 										<Trash2 className='w-5 h-5' />
 									</Button>
 
 									<Button
 										variant='outline'
-										className='text-blue-600 border-blue-400 flex items-center gap-1'
+										className='border-border text-foreground hover:bg-accent hover:text-accent-foreground flex items-center gap-1'
 										onClick={() => onAddItem(list.id)}
 									>
 										<Plus className='w-4 h-4' /> Пункт
@@ -114,9 +114,9 @@ export const ChecklistList = ({
 							<div>
 								<Progress
 									value={progress}
-									className='h-2 bg-blue-100 [&>div]:bg-blue-500'
+									className='h-2 bg-muted [&>div]:bg-primary'
 								/>
-								<p className='text-sm text-blue-600 mt-1'>
+								<p className='text-sm text-muted-foreground mt-1'>
 									{completed} из {total} выполнено
 								</p>
 							</div>
@@ -128,7 +128,7 @@ export const ChecklistList = ({
 								list.items.map(item => (
 									<div
 										key={item.id}
-										className='border rounded-md p-2 space-y-2'
+										className='border border-border rounded-md p-2 space-y-2 bg-background/40'
 									>
 										{/* Первая строка: чекбокс + название */}
 										<div className='flex items-center gap-2'>
@@ -139,13 +139,16 @@ export const ChecklistList = ({
 												onChange={e =>
 													onToggleItem(list.id, item.id, e.target.checked)
 												}
-												className='h-4 w-4 accent-blue-600'
+												className='h-4 w-4 accent-primary'
 											/>
+
 											<Field
 												defaultValue={item.name || 'Новый пункт'}
 												readOnly={!canEditTask}
 												className={`border-none bg-transparent text-sm w-full focus-visible:ring-0 ${
-													item.completed ? 'line-through text-gray-400' : ''
+													item.completed
+														? 'line-through text-muted-foreground'
+														: ''
 												}`}
 												onBlur={e => {
 													if (!canEditTask) return
@@ -189,15 +192,19 @@ export const ChecklistList = ({
 													variant='ghost'
 													size='icon'
 													onClick={() => onDeleteItem(list.id, item.id)}
+													className='text-destructive hover:bg-destructive/10'
+													title='Удалить пункт'
 												>
-													<Trash2 className='w-5 h-5 text-red-500' />
+													<Trash2 className='w-5 h-5' />
 												</Button>
 											)}
 										</div>
 									</div>
 								))
 							) : (
-								<p className='text-sm text-gray-400 italic'>Пока нет пунктов</p>
+								<p className='text-sm text-muted-foreground italic'>
+									Пока нет пунктов
+								</p>
 							)}
 						</div>
 					</div>

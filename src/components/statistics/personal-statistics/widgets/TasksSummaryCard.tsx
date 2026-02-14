@@ -24,7 +24,7 @@ export function TasksSummaryCard() {
 
 	if (!stats) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				Нет данных для отображения
 			</div>
 		)
@@ -38,9 +38,9 @@ export function TasksSummaryCard() {
 
 	if (isAllZero) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				<div className='flex items-center justify-between mb-3'>
-					<h3 className='text-lg font-semibold text-blue-600'>Задачи</h3>
+					<h3 className='text-lg font-semibold text-primary'>Задачи</h3>
 
 					<PeriodSelect
 						value={period}
@@ -48,7 +48,7 @@ export function TasksSummaryCard() {
 					/>
 				</div>
 
-				<p className='text-sm text-gray-500 text-center py-6'>
+				<p className='text-sm text-muted-foreground text-center py-6'>
 					Нет задач за выбранный период
 				</p>
 			</div>
@@ -56,9 +56,9 @@ export function TasksSummaryCard() {
 	}
 
 	return (
-		<div className='bg-white border rounded-lg p-4 shadow-sm'>
+		<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 			<div className='flex items-center justify-between mb-3'>
-				<h3 className='text-lg font-semibold text-blue-600'>Задачи</h3>
+				<h3 className='text-lg font-semibold text-primary'>Задачи</h3>
 
 				<PeriodSelect
 					value={period}
@@ -66,25 +66,39 @@ export function TasksSummaryCard() {
 				/>
 			</div>
 
-			<div className='grid grid-cols-2 gap-4 text-gray-700'>
-				<div className='p-3 bg-blue-50 rounded-lg'>
-					<p className='text-sm'>Всего</p>
-					<p className='text-2xl font-bold'>{stats.total}</p>
+			<div className='grid grid-cols-2 gap-4'>
+				<div className='p-3 rounded-lg border border-border bg-[hsl(var(--info))]'>
+					<p className='text-sm text-[hsl(var(--info-foreground))]'>Всего</p>
+					<p className='text-2xl font-bold text-[hsl(var(--info-foreground))]'>
+						{stats.total}
+					</p>
 				</div>
 
-				<div className='p-3 bg-green-50 rounded-lg'>
-					<p className='text-sm'>Завершено</p>
-					<p className='text-2xl font-bold'>{stats.done}</p>
+				<div className='p-3 rounded-lg border border-border bg-[hsl(var(--success))]'>
+					<p className='text-sm text-[hsl(var(--success-foreground))]'>
+						Завершено
+					</p>
+					<p className='text-2xl font-bold text-[hsl(var(--success-foreground))]'>
+						{stats.done}
+					</p>
 				</div>
 
-				<div className='p-3 bg-yellow-50 rounded-lg'>
-					<p className='text-sm'>Активных</p>
-					<p className='text-2xl font-bold'>{stats.active}</p>
+				<div className='p-3 rounded-lg border border-border bg-[hsl(var(--warning))]'>
+					<p className='text-sm text-[hsl(var(--warning-foreground))]'>
+						Активных
+					</p>
+					<p className='text-2xl font-bold text-[hsl(var(--warning-foreground))]'>
+						{stats.active}
+					</p>
 				</div>
 
-				<div className='p-3 bg-red-50 rounded-lg'>
-					<p className='text-sm'>Просрочено</p>
-					<p className='text-2xl font-bold'>{stats.overdue}</p>
+				<div className='p-3 rounded-lg border border-border bg-[hsl(var(--danger))]'>
+					<p className='text-sm text-[hsl(var(--danger-foreground))]'>
+						Просрочено
+					</p>
+					<p className='text-2xl font-bold text-[hsl(var(--danger-foreground))]'>
+						{stats.overdue}
+					</p>
 				</div>
 			</div>
 		</div>

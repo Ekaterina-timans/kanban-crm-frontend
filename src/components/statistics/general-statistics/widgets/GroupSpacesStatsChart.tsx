@@ -14,9 +14,9 @@ import {
 
 import { PeriodSelect } from '@/components/ui/period-select/PeriodSelect'
 import { PeriodParams } from '@/components/ui/period-select/period'
+import { SkeletonWidget } from '@/components/ui/skeleton/SkeletonWidget'
 
 import { useGroupSpacesStats } from '@/hooks/statistics/useGroupStatistics'
-import { SkeletonWidget } from '@/components/ui/skeleton/SkeletonWidget'
 
 export function GroupSpacesStatsChart() {
 	const [period, setPeriod] = useState<PeriodParams>({ period: 'month' })
@@ -32,14 +32,14 @@ export function GroupSpacesStatsChart() {
 		})) ?? []
 
 	if (isLoading) {
-		return <SkeletonWidget type="chart-line" />
+		return <SkeletonWidget type='chart-line' />
 	}
 
 	if (!data || data.length === 0) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				<div className='flex justify-between items-center mb-3'>
-					<h3 className='text-lg font-semibold text-blue-600'>
+					<h3 className='text-lg font-semibold text-primary'>
 						Самые активные проекты
 					</h3>
 					<PeriodSelect
@@ -47,7 +47,7 @@ export function GroupSpacesStatsChart() {
 						onChange={setPeriod}
 					/>
 				</div>
-				<p className='text-sm text-gray-500 text-center py-6'>
+				<p className='text-sm text-muted-foreground text-center py-6'>
 					Нет данных для выбранного периода
 				</p>
 			</div>
@@ -55,9 +55,9 @@ export function GroupSpacesStatsChart() {
 	}
 
 	return (
-		<div className='bg-white border rounded-lg p-4 shadow-sm'>
+		<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 			<div className='flex justify-between items-center mb-3'>
-				<h3 className='text-lg font-semibold text-blue-600'>
+				<h3 className='text-lg font-semibold text-primary'>
 					Самые активные проекты
 				</h3>
 				<PeriodSelect

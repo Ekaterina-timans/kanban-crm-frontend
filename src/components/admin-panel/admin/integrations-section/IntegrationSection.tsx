@@ -37,26 +37,28 @@ export function IntegrationSection() {
 	const tgSettings: any = telegram?.settings?.telegram ?? {}
 
 	if (!currentGroupId) {
-		return <div className='text-slate-600'>Группа не выбрана</div>
+		return <div className='text-muted-foreground'>Группа не выбрана</div>
 	}
 
-	if (isLoading) return <div className='text-slate-600'>Загрузка…</div>
+	if (isLoading) return <div className='text-muted-foreground'>Загрузка…</div>
 	if (error)
-		return <div className='text-red-600'>Не удалось загрузить интеграции</div>
+		return (
+			<div className='text-destructive'>Не удалось загрузить интеграции</div>
+		)
 
 	const canShowConnect =
 		!!telegram && (telegram.status !== 'active' || showConnect)
 
 	return (
 		<div className='space-y-4 max-w-2xl'>
-			<h3 className='text-xl font-semibold text-blue-600'>Интеграции</h3>
+			<h3 className='text-xl font-semibold text-primary'>Интеграции</h3>
 
 			{/* Карточка Telegram */}
-			<div className='bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3'>
+			<div className='bg-card text-card-foreground border border-border rounded-xl p-4 shadow-sm space-y-3'>
 				<div className='flex items-start justify-between gap-3'>
 					<div>
 						<div className='text-lg font-semibold'>Telegram</div>
-						<p className='text-sm text-slate-600 mt-1'>
+						<p className='text-sm text-muted-foreground mt-1'>
 							Подключите Telegram-бота к этой группе, чтобы получать диалоги и
 							отвечать из панели.
 						</p>
@@ -83,14 +85,14 @@ export function IntegrationSection() {
 				{telegram ? (
 					<div className='text-sm'>
 						<div className='flex items-center gap-2'>
-							<span className='text-slate-600'>Статус:</span>
+							<span className='text-muted-foreground'>Статус:</span>
 							<span
 								className={
 									telegram.status === 'active'
 										? 'text-green-600 font-medium'
 										: telegram.status === 'error'
-											? 'text-red-600 font-medium'
-											: 'text-slate-700 font-medium'
+											? 'text-destructive font-medium'
+											: 'text-foreground font-medium'
 								}
 							>
 								{telegram.status}
@@ -98,21 +100,20 @@ export function IntegrationSection() {
 						</div>
 
 						<div className='flex items-center gap-2 mt-1'>
-							<span className='text-slate-600'>Название:</span>
-							<span className='text-slate-900 font-medium'>
+							<span className='text-muted-foreground'>Название:</span>
+							<span className='text-foreground font-medium'>
 								{telegram.display_name}
 							</span>
 						</div>
 
 						{telegram.status === 'error' && (
-							<div className='mt-2 text-sm text-red-600'>
-								Токен неверный/устарел — переподключите
-								бота.
+							<div className='mt-2 text-sm text-destructive'>
+								Токен неверный/устарел — переподключите бота.
 							</div>
 						)}
 					</div>
 				) : (
-					<p className='text-sm text-slate-600'>
+					<p className='text-sm text-muted-foreground'>
 						Сначала создайте интеграцию, затем подключите токен бота.
 					</p>
 				)}
@@ -120,14 +121,14 @@ export function IntegrationSection() {
 
 			{/* Форма подключения/переподключения */}
 			{canShowConnect && (
-				<div className='bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3'>
+				<div className='bg-card text-card-foreground border border-border rounded-xl p-4 shadow-sm space-y-3'>
 					<h4 className='font-semibold'>
 						{telegram?.status === 'active'
 							? 'Смена токена'
 							: 'Подключение Telegram-бота'}
 					</h4>
 
-					<p className='text-sm text-slate-600'>
+					<p className='text-sm text-muted-foreground'>
 						Создайте бота в <span className='font-medium'>@BotFather</span>,
 						скопируйте токен и вставьте сюда.
 					</p>
@@ -182,19 +183,19 @@ export function IntegrationSection() {
 
 			{/* Бот подключён */}
 			{telegram && telegram.status === 'active' && !showConnect && (
-				<div className='bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3'>
+				<div className='bg-card text-card-foreground border border-border rounded-xl p-4 shadow-sm space-y-3'>
 					<h4 className='font-semibold'>Бот подключён</h4>
 
 					<div className='grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm'>
-						<div className='border rounded-lg p-3'>
-							<div className='text-slate-500 text-xs'>Username</div>
+						<div className='border border-border rounded-lg p-3'>
+							<div className='text-muted-foreground text-xs'>Username</div>
 							<div className='font-medium'>
 								{tgSettings?.bot_username ? `@${tgSettings.bot_username}` : '—'}
 							</div>
 						</div>
 
-						<div className='border rounded-lg p-3'>
-							<div className='text-slate-500 text-xs'>Name</div>
+						<div className='border border-border rounded-lg p-3'>
+							<div className='text-muted-foreground text-xs'>Name</div>
 							<div className='font-medium'>{tgSettings?.bot_name ?? '—'}</div>
 						</div>
 					</div>

@@ -16,8 +16,6 @@ import Field from '@/components/ui/field/Field'
 import { SelectComponent } from '@/components/ui/select/SelectComponent'
 import { Tooltip } from '@/components/ui/tooltip/Tooltip'
 
-import { formatDateForCard } from '@/utils/date-utils'
-
 import { IHeading, countActiveFilters } from './task-filters-ui.types'
 
 export function HeaderProject({
@@ -25,7 +23,6 @@ export function HeaderProject({
 	description,
 	onSettingsClick,
 	canOpenSettings = false,
-
 	isFiltersOpen,
 	onToggleFilters,
 	filters,
@@ -33,7 +30,6 @@ export function HeaderProject({
 	onChangeFilters,
 	onApplyFilters,
 	onResetFilters,
-
 	assigneeOptions = [],
 	statusOptions = [],
 	priorityOptions = []
@@ -68,8 +64,8 @@ export function HeaderProject({
 
 	return (
 		<>
-			{/* Шапка: без “таблетки”, просто строка как в приложении */}
-			<div className='flex items-center justify-between px-5 pt-4'>
+			{/* Шапка */}
+			<div className='flex items-center justify-between px-5 py-2'>
 				<div className='flex items-start gap-3 min-w-0'>
 					<h1 className='text-3xl font-medium text-foreground truncate'>
 						{name}
@@ -120,12 +116,9 @@ export function HeaderProject({
 				</div>
 			</div>
 
-			{/* Разделитель как в UI */}
-			<div className='h-px bg-foreground/10 dark:bg-foreground/15 w-full mt-3' />
-
 			{/* Фильтры: аккуратная карточка под шапкой */}
 			{isFiltersOpen && (
-				<div className='mx-5 mt-3 mb-1 px-5 py-4 rounded-2xl bg-card border border-border shadow-sm'>
+				<div className='mx-5 my-1 px-5 py-4 rounded-2xl bg-card border border-border shadow-sm'>
 					<div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
 						<Field
 							placeholder='Поиск...'

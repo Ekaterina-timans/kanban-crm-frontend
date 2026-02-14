@@ -26,9 +26,9 @@ export function AvgDurationCard() {
 	const formatted = days > 0 ? `${days} д ${hours} ч` : `${hours || avg} ч`
 
 	return (
-		<div className='bg-white border rounded-lg p-4 shadow-sm flex flex-col'>
+		<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm flex flex-col'>
 			<div className='flex items-center justify-between mb-2'>
-				<h3 className='text-lg font-semibold text-blue-600'>
+				<h3 className='text-lg font-semibold text-primary'>
 					Среднее время выполнения задачи
 				</h3>
 
@@ -40,13 +40,13 @@ export function AvgDurationCard() {
 
 			{hasData ? (
 				<>
-					<p className='text-3xl font-bold text-gray-800'>≈ {formatted}</p>
-					<p className='text-sm text-gray-500 mt-2'>
+					<p className='text-3xl font-bold text-foreground'>≈ {formatted}</p>
+					<p className='text-sm text-muted-foreground mt-2'>
 						Среднее время между созданием и завершением задачи.
 					</p>
 				</>
 			) : (
-				<p className='text-sm text-gray-500 text-center py-6'>
+				<p className='text-sm text-muted-foreground text-center py-6'>
 					Пока нет завершённых задач
 				</p>
 			)}

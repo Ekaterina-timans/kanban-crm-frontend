@@ -1,4 +1,8 @@
+'use client'
+
 import { useForm } from 'react-hook-form'
+
+import { useAuth } from '@/providers/AuthProvider'
 
 import { IGroupForm, IModalProps } from '@/types/modal.types'
 
@@ -9,25 +13,30 @@ import Field from '../ui/field/Field'
 import { BigField } from '../ui/field/big-field/BigField'
 import { ModalWrapper } from '../ui/modal/ModalWrapper'
 
-export function CreateGroupModal({ isOpen, onClose }: IModalProps) {
+type Props = IModalProps & {
+	force?: boolean
+}
+
+export function CreateGroupModal({ isOpen, onClose, force = false }: Props) {
 	if (!isOpen) return null
+
+	const { checkAuth, logout } = useAuth()
 
 	const {
 		register,
 		handleSubmit,
 		reset,
 		formState: { errors }
-	} = useForm<IGroupForm>({
-		mode: 'onChange'
-	})
+	} = useForm<IGroupForm>({ mode: 'onChange' })
 
 	const { createGroup, isPending } = useCreateGroup()
 
 	const onSubmit = async (data: IGroupForm) => {
 		try {
 			await createGroup(data)
+			await checkAuth()
 			reset()
-			onClose()
+			if (!force) onClose()
 		} catch (error) {
 			console.log('Error creating group:', error)
 		}
@@ -37,16 +46,21 @@ export function CreateGroupModal({ isOpen, onClose }: IModalProps) {
 		<ModalWrapper
 			className='max-w-md'
 			isOpen={isOpen}
-			onClose={onClose}
+			onClose={force ? () => {} : onClose}
+			disableClose={force}
+			transparentBackdrop={force}
 		>
 			<div className='space-y-1 text-center'>
 				<h2 className='text-xl font-semibold tracking-tight'>
 					Создание новой группы
 				</h2>
 				<p className='text-sm text-muted-foreground'>
-					Укажите название и при необходимости добавьте описание.
+					{force
+						? 'Чтобы начать пользоваться сервисом, создайте первую группу или выйдите.'
+						: 'Укажите название и при необходимости добавьте описание.'}
 				</p>
 			</div>
+
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className='mt-6 space-y-4'
@@ -62,7 +76,20 @@ export function CreateGroupModal({ isOpen, onClose }: IModalProps) {
 					placeholder='Описание группы'
 					className='mb-12'
 				/>
+
 				<div className='mt-6 flex items-center justify-end gap-3'>
+					{/* Force режим: можно выйти */}
+					{force && (
+						<Button
+							variant='destructive'
+							type='button'
+							onClick={() => logout()}
+							disabled={isPending}
+						>
+							Выйти
+						</Button>
+					)}
+
 					<Button
 						variant='default'
 						type='submit'
@@ -70,13 +97,16 @@ export function CreateGroupModal({ isOpen, onClose }: IModalProps) {
 					>
 						{isPending ? 'Создаём...' : 'Сохранить'}
 					</Button>
-					<Button
-						variant='secondary'
-						onClick={onClose}
-						type='button'
-					>
-						Отмена
-					</Button>
+
+					{!force && (
+						<Button
+							variant='secondary'
+							onClick={onClose}
+							type='button'
+						>
+							Отмена
+						</Button>
+					)}
 				</div>
 			</form>
 		</ModalWrapper>

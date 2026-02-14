@@ -5,9 +5,9 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 import { PeriodSelect } from '@/components/ui/period-select/PeriodSelect'
 import { PeriodParams } from '@/components/ui/period-select/period'
+import { SkeletonWidget } from '@/components/ui/skeleton/SkeletonWidget'
 
 import { useWidgetStatistics } from '@/hooks/statistics/useWidgetStatistics'
-import { SkeletonWidget } from '@/components/ui/skeleton/SkeletonWidget'
 
 const COLORS = ['#4ade80', '#60a5fa', '#f87171']
 
@@ -17,12 +17,12 @@ export function ChecklistPieChart() {
 	const { data: stats, isLoading } = useWidgetStatistics('checklist', period)
 
 	if (isLoading) {
-		return <SkeletonWidget type="chart-pie" />
+		return <SkeletonWidget type='chart-pie' />
 	}
 
 	if (!stats) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				Нет данных для отображения
 			</div>
 		)
@@ -32,9 +32,9 @@ export function ChecklistPieChart() {
 
 	if (total === 0) {
 		return (
-			<div className='bg-white border rounded-lg p-4 shadow-sm'>
+			<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 				<div className='flex items-center justify-between mb-3'>
-					<h3 className='text-lg font-semibold text-blue-600'>
+					<h3 className='text-lg font-semibold text-primary'>
 						Пункты в чек-листах
 					</h3>
 					<PeriodSelect
@@ -43,7 +43,7 @@ export function ChecklistPieChart() {
 					/>
 				</div>
 
-				<p className='text-sm text-gray-500 text-center py-6'>
+				<p className='text-sm text-muted-foreground text-center py-6'>
 					Нет пунктов чек-листа за выбранный период
 				</p>
 			</div>
@@ -60,9 +60,9 @@ export function ChecklistPieChart() {
 	]
 
 	return (
-		<div className='bg-white border rounded-lg p-4 shadow-sm'>
+		<div className='bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm'>
 			<div className='flex items-center justify-between mb-3'>
-				<h3 className='text-lg font-semibold text-blue-600'>
+				<h3 className='text-lg font-semibold text-primary'>
 					Пункты в чек-листах
 				</h3>
 
@@ -95,7 +95,7 @@ export function ChecklistPieChart() {
 				</PieChart>
 			</ResponsiveContainer>
 
-			<p className='text-xs text-gray-500 mt-2'>
+			<p className='text-xs text-muted-foreground mt-2'>
 				*Просроченные входят в «Осталось», но выделены отдельно.
 			</p>
 		</div>

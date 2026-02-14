@@ -27,9 +27,7 @@ const Field = forwardRef<HTMLInputElement, FieldProps>(
 		return (
 			<label className={cn('flex flex-col gap-1', className)}>
 				{label && (
-					<span className='text-sm font-medium text-muted-foreground'>
-						{label}
-					</span>
+					<span className='text-base font-medium text-foreground'>{label}</span>
 				)}
 
 				<div className='relative'>

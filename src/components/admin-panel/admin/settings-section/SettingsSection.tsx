@@ -28,7 +28,7 @@ export function SettingsSection() {
 		handleSubmit,
 		control,
 		reset,
-		formState: { errors, isSubmitting }
+		formState: { errors }
 	} = useForm<FormValues>({
 		defaultValues: {
 			name: '',
@@ -68,36 +68,34 @@ export function SettingsSection() {
 
 	return (
 		<div className='space-y-4 max-w-xl'>
-			<h3 className='text-xl font-semibold text-blue-600'>Настройки группы</h3>
+			<h3 className='text-xl font-semibold text-primary'>Настройки группы</h3>
 
-			{/* ФОРМА */}
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className='bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-4'
+				className='bg-card text-card-foreground border border-border rounded-xl p-4 shadow-sm space-y-4'
 			>
-				{/* Название */}
 				<div>
 					<label className='text-sm font-semibold'>Название группы</label>
 					<input
 						{...register('name', { required: 'Название обязательно' })}
-						className='w-full border border-gray-300 rounded-lg p-2 mt-1 text-sm'
+						className='w-full border border-input rounded-lg p-2 mt-1 text-sm bg-background text-foreground'
 					/>
 					{errors.name && (
-						<p className='text-red-500 text-xs mt-1'>{errors.name.message}</p>
+						<p className='text-destructive text-xs mt-1'>
+							{errors.name.message}
+						</p>
 					)}
 				</div>
 
-				{/* Описание */}
 				<div>
 					<label className='text-sm font-semibold'>Описание</label>
 					<textarea
 						{...register('description')}
 						rows={3}
-						className='w-full border border-gray-300 rounded-lg p-2 mt-1 text-sm'
-					></textarea>
+						className='w-full border border-input rounded-lg p-2 mt-1 text-sm bg-background text-foreground'
+					/>
 				</div>
 
-				{/* Политика приглашений */}
 				<div>
 					<label className='text-sm font-semibold'>
 						Кто может приглашать участников
@@ -107,7 +105,7 @@ export function SettingsSection() {
 						name='invite_policy'
 						control={control}
 						render={({ field }) => (
-							<div className='mt-2 space-y-1'>
+							<div className='mt-2 space-y-1 text-sm'>
 								<label className='flex items-center gap-2'>
 									<input
 										type='radio'
@@ -142,10 +140,9 @@ export function SettingsSection() {
 				</Button>
 			</form>
 
-			{/* 🔥 БЛОК УДАЛЕНИЯ ГРУППЫ */}
-			<div className='bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3'>
+			<div className='bg-card text-card-foreground border border-border rounded-xl p-4 shadow-sm space-y-3'>
 				<h4 className='font-semibold'>Удаление группы</h4>
-				<p className='text-sm'>
+				<p className='text-sm text-muted-foreground'>
 					После удаления группа и все данные будут безвозвратно удалены.
 				</p>
 

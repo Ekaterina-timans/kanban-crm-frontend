@@ -20,6 +20,9 @@ export interface ITask extends IBase {
   status_id: StatusId
   priority_id: PriorityId
   due_date?: string | null
+  checklists_count?: number
+  checklist_items_total?: number
+  checklist_items_done?: number
 }
 
 export type TypeTaskFormState = Partial<

@@ -120,13 +120,16 @@ export function TaskDetailsPanel({
 		})
 	}
 
+	// единый заголовок секции (чтобы не плодить классы)
+	const sectionTitle = 'font-semibold text-foreground mb-1'
+
 	return (
 		<ScrollArea className='h-full pr-2'>
 			<div className='space-y-5 pb-2 pl-1'>
 				<div>
-					<h3 className='font-semibold text-blue-600 mb-1'>Ответственный</h3>
+					<h3 className={sectionTitle}>Ответственный</h3>
 					{usersLoading ? (
-						<p className='text-sm text-gray-400'>Загрузка...</p>
+						<p className='text-sm text-muted-foreground'>Загрузка...</p>
 					) : (
 						<SelectComponent
 							options={assigneeOptions}
@@ -139,8 +142,9 @@ export function TaskDetailsPanel({
 						/>
 					)}
 				</div>
+
 				<div>
-					<h3 className='font-semibold text-blue-600 mb-50'>Описание</h3>
+					<h3 className={sectionTitle}>Описание</h3>
 					<BigField
 						value={description}
 						placeholder='Введите описание задачи...'
@@ -158,9 +162,10 @@ export function TaskDetailsPanel({
 						className={cn(!canEditTask && 'opacity-70 cursor-not-allowed')}
 					/>
 				</div>
+
 				<div className='flex gap-6'>
 					<div className='flex-1'>
-						<h3 className='font-semibold text-blue-600 mb-2'>Статус</h3>
+						<h3 className='font-semibold text-foreground mb-2'>Статус</h3>
 						<SelectComponent
 							options={statusOptions}
 							placeholder='Выберите статус'
@@ -176,7 +181,7 @@ export function TaskDetailsPanel({
 					</div>
 
 					<div className='flex-1'>
-						<h3 className='font-semibold text-blue-600 mb-2'>Приоритет</h3>
+						<h3 className='font-semibold text-foreground mb-2'>Приоритет</h3>
 						<SelectComponent
 							options={priorityOptions}
 							placeholder='Выберите приоритет'
@@ -191,8 +196,11 @@ export function TaskDetailsPanel({
 						/>
 					</div>
 				</div>
+
 				<div>
-					<h3 className='font-semibold text-blue-600 mb-2'>Срок выполнения</h3>
+					<h3 className='font-semibold text-foreground mb-2'>
+						Срок выполнения
+					</h3>
 					<CalendarComponent
 						value={task.due_date ? new Date(task.due_date) : null}
 						placeholder='Выберите дату'
@@ -212,9 +220,10 @@ export function TaskDetailsPanel({
 						disabled={!canEditTask}
 					/>
 				</div>
+
 				<div>
 					{isLoading ? (
-						<p className='text-sm text-gray-400'>Загрузка...</p>
+						<p className='text-sm text-muted-foreground'>Загрузка...</p>
 					) : (
 						<ChecklistList
 							checklists={checklists}
