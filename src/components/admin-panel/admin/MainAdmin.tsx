@@ -1,9 +1,10 @@
 import { HistorySection } from './history-section/HistorySection'
+import { IntegrationSection } from './integrations-section/IntegrationSection'
 import { MembersSection } from './members-section/MembersSection'
 import { SettingsSection } from './settings-section/SettingsSection'
 
 interface AdminProps {
-	active: 'members' | 'settings' | 'history'
+	active: 'members' | 'settings' | 'integration' | 'history'
 }
 
 export function MainAdmin({ active }: AdminProps) {
@@ -11,6 +12,7 @@ export function MainAdmin({ active }: AdminProps) {
 		<div className='p-8 overflow-auto'>
 			{active === 'members' && <MembersSection />}
 			{active === 'settings' && <SettingsSection />}
+			{active === 'integration' && <IntegrationSection />}
 			{active === 'history' && <HistorySection />}
 		</div>
 	)

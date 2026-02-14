@@ -26,7 +26,7 @@ export function SidebarChat() {
 	const { data, isFetching } = useGlobalChatSearch(debounced)
 
 	return (
-		<aside className='h-full bg-card border-r border-border overflow-hidden p-3 flex flex-col'>
+		<aside className='h-full bg-card border-r border-border overflow-hidden px-3 py-1 flex flex-col'>
 			<div className='mt-3'>
 				<Field
 					placeholder='Поиск...'

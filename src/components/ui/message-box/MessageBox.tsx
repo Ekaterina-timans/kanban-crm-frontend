@@ -43,7 +43,6 @@ export function MessageBox({
 	const fileInputRef = useRef<HTMLInputElement>(null)
 
 	useEffect(() => {
-		// сброс при смене списка участников
 		setMentionedIds([])
 	}, [mentionMembers])
 
@@ -52,7 +51,6 @@ export function MessageBox({
 	const onFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.files) return
 		const picked = Array.from(e.target.files)
-		// простая защита от дублей по (name+size+lastModified)
 		const key = (f: File) => `${f.name}|${f.size}|${f.lastModified}`
 		setFiles(prev => {
 			const seen = new Set(prev.map(key))
@@ -60,7 +58,6 @@ export function MessageBox({
 			for (const f of picked) if (!seen.has(key(f))) next.push(f)
 			return next
 		})
-		// сбрасываем value, чтобы можно было выбрать тот же файл снова
 		e.currentTarget.value = ''
 	}
 
@@ -94,7 +91,9 @@ export function MessageBox({
 		await onSend({
 			text: message.trim(),
 			files,
-			mentioned_user_ids: mentionedIds
+			mentioned_user_ids: getMentionedUserIds
+				? getMentionedUserIds(message)
+				: mentionedIds
 		})
 		setMessage('')
 		setFiles([])
@@ -118,7 +117,6 @@ export function MessageBox({
 				onChange={onFilesChange}
 			/>
 
-			{/* Превью файлов */}
 			{previews.length > 0 && (
 				<div className='rounded-xl border bg-white p-2 shadow-sm'>
 					<div className='flex max-h-24 flex-wrap gap-2 overflow-y-auto'>
@@ -143,7 +141,6 @@ export function MessageBox({
 				</div>
 			)}
 
-			{/* Поле ввода и кнопка */}
 			<div className='flex w-full items-start justify-between gap-4 flex-shrink-0'>
 				<BigField
 					ref={textareaRef}
@@ -157,10 +154,13 @@ export function MessageBox({
 					showEmojiPicker={true}
 					showMentions={showMentions}
 					onKeyDown={handleKeyDown}
-					mentionMembers={mentionMembers ?? []}
-					onMentionSelect={user => {
-						setMentionedIds(prev => [...new Set([...prev, user.id])])
-					}}
+					mentionMembers={showMentions ? (mentionMembers ?? []) : []}
+					onMentionSelect={
+						showMentions
+							? user =>
+									setMentionedIds(prev => [...new Set([...prev, user.id])])
+							: undefined
+					}
 				/>
 				<Button
 					className='mt-2'

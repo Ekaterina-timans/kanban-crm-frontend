@@ -45,6 +45,9 @@ export function MessagesList({
 	const [showScrollButton, setShowScrollButton] = useState(false)
 	const [loadingOlder, setLoadingOlder] = useState(false)
 
+	// ✅ один sticky-лейбл текущей даты (не копится)
+	const [activeLabel, setActiveLabel] = useState<string>('')
+
 	const uniqMessages = useMemo(() => {
 		const seen = new Set<string | number>()
 		const out: IMessage[] = []
@@ -94,9 +97,9 @@ export function MessagesList({
 			const nearBottom = scrollTop + clientHeight >= scrollHeight - 120
 			setShowScrollButton(!nearBottom)
 		}
-		vp.addEventListener('scroll', handle)
+		vp.addEventListener('scroll', handle, { passive: true })
 		handle()
-		return () => vp.removeEventListener('scroll', handle)
+		return () => vp.removeEventListener('scroll', handle as any)
 	}, [messages.length])
 
 	const scrollToBottom = () => {
@@ -127,15 +130,72 @@ export function MessagesList({
 		const vp = getViewport()
 		if (!vp) return
 		const onScroll = () => handleMaybeLoadOlder()
-		vp.addEventListener('scroll', onScroll)
-		return () => vp.removeEventListener('scroll', onScroll)
+		vp.addEventListener('scroll', onScroll, { passive: true })
+		return () => vp.removeEventListener('scroll', onScroll as any)
 	}, [handleMaybeLoadOlder])
+
+	// ✅ вычисление activeLabel по текущему скроллу (один sticky header)
+	useLayoutEffect(() => {
+		const vp = getViewport()
+		if (!vp) return
+
+		let raf = 0
+
+		const calcActiveLabel = () => {
+			if (raf) cancelAnimationFrame(raf)
+			raf = requestAnimationFrame(() => {
+				const seps = Array.from(
+					vp.querySelectorAll('[data-sep="1"]')
+				) as HTMLElement[]
+
+				if (!seps.length) {
+					setActiveLabel('')
+					return
+				}
+
+				// линия "верха" внутри viewport (чуть ниже для стабильности)
+				const vpTop = vp.getBoundingClientRect().top
+				const threshold = vpTop + 16
+
+				let current = ''
+
+				// последний сепаратор, дошедший до threshold
+				for (const el of seps) {
+					const r = el.getBoundingClientRect()
+					if (r.top <= threshold) current = el.dataset.sepLabel || current
+					else break
+				}
+
+				// если мы у самого верха и ни один не прошёл threshold — берём первый
+				if (!current) current = seps[0].dataset.sepLabel || ''
+
+				setActiveLabel(current)
+			})
+		}
+
+		vp.addEventListener('scroll', calcActiveLabel, { passive: true })
+		calcActiveLabel()
+
+		return () => {
+			vp.removeEventListener('scroll', calcActiveLabel as any)
+			if (raf) cancelAnimationFrame(raf)
+		}
+	}, [rows.length])
 
 	return (
 		<ScrollArea
 			ref={scrollAreaRef}
 			className='flex-1 px-4'
 		>
+			{/* ✅ один sticky header с датой */}
+			{activeLabel && (
+				<div className='sticky top-2 z-20 flex justify-center pointer-events-none'>
+					<span className='px-3 py-1 text-xs rounded-full bg-muted text-muted-foreground border border-border shadow-sm'>
+						{activeLabel}
+					</span>
+				</div>
+			)}
+
 			<div className='space-y-4 py-4'>
 				{isLoading && !messages.length && (
 					<div className='text-sm text-muted-foreground'>Загрузка…</div>
@@ -149,10 +209,13 @@ export function MessagesList({
 
 				{rows.map(row => {
 					if (row.type === 'sep') {
+						// ❗️сепараторы БЕЗ sticky, только маркеры для вычисления activeLabel
 						return (
 							<div
 								key={row.id}
-								className='sticky top-2 z-10 flex justify-center'
+								data-sep='1'
+								data-sep-label={row.label}
+								className='flex justify-center'
 							>
 								<span className='px-3 py-1 text-xs rounded-full bg-muted text-muted-foreground border border-border shadow-sm'>
 									{row.label}
@@ -160,11 +223,9 @@ export function MessagesList({
 							</div>
 						)
 					}
+
 					const m = row.message
 					const mine = String(m.user_id) === String(myId)
-					const authorInitial = (m.user?.name ?? m.user?.email ?? '?')
-						.slice(0, 1)
-						.toUpperCase()
 
 					return (
 						<div

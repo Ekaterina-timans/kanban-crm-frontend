@@ -1,4 +1,4 @@
-import { Clock, Settings, Users } from 'lucide-react'
+import { Clock, Plug, Settings, Users } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
@@ -11,6 +11,7 @@ export function SidebarAdmin({ active, setActive }: SidebarAdminProps) {
 	const items = [
 		{ id: 'members', label: 'Участники', icon: Users },
 		{ id: 'settings', label: 'Настройки группы', icon: Settings },
+		{ id: 'integration', label: 'Интеграции', icon: Plug },
 		{ id: 'history', label: 'История действий', icon: Clock }
 	]
 
